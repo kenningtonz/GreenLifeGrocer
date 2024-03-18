@@ -10,22 +10,24 @@ const buttonVariants = cva(
 		variants: {
 			variant: {
 				default:
-					"shadow-md shadow-pink-500 bg-pink-200 text-pink-500  hover:bg-pink-200/90",
-				green: "bg-green-30 text-green-500 hover:bg-green-300/90 ",
+					"shadow-pink-500/50  bg-pink-200 text-pink-500  hover:bg-pink-200/90",
+				green:
+					"bg-olive/80 text-green-900 hover:bg-olive/90 data-[active=true]:bg-green data-[active=true]:text-white",
 				outline:
 					"border border-neutral-200 bg-white hover:bg-neutral-100 hover:text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:hover:bg-neutral-800 dark:hover:text-neutral-50",
-				greenDark: "bg-green-500 text-green-100 hover:bg-green-500/90 ",
+				greenDark: "bg-green-900 text-green-100 hover:bg-green-900/90 ",
 				ghost:
 					"hover:bg-neutral-100 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-50",
 				link:
 					"text-neutral-900 underline-offset-4 hover:underline dark:text-neutral-50",
+				ghostWhite: " text-white hover:bg-white/20 hover:text-green-200 ",
 			},
 			rounded: {
 				default: "rounded-md",
-				none: "rounded-none",
+				none: "",
 			},
 			size: {
-				default: "h-10 px-1 py-o5",
+				default: "h-10 px-4 py-2",
 				sm: "h-9 rounded-md px-3",
 				lg: "h-11 rounded-md px-8",
 				icon: "h-10 w-10",

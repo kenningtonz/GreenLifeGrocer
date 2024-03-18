@@ -1,12 +1,16 @@
 import Image from "next/image";
+import "@/css/footer.css";
+import Link from "next/link";
 
 const Footer = () => {
 	return (
 		<>
-			<footer className='footer p-10 bg-green-500 text-green-100'>
+			<footer className='footer p-10 bg-green-900 text-green-100'>
 				<nav>
 					<h6 className='footer-title'>Departments</h6>
-					<a className='link link-hover'>Produce</a>
+					<Link href={"/departments/produce"} className='link link-hover'>
+						Produce
+					</Link>
 					<a className='link link-hover'>Meat</a>
 					<a className='link link-hover'>Pantry</a>
 					<a className='link link-hover'>Dairy & Eggs</a>
@@ -23,8 +27,8 @@ const Footer = () => {
 					<a className='link link-hover'>Sign In</a>
 				</nav>
 			</footer>
-			<footer className='footer px-10 py-1 border-t bg-green-500 text-green-100 border-green-300'>
-				<aside className='items-center grid-flow-col'>
+			<footer className='footer px-10 py-4 border-t bg-green-900 text-green-100 border-green-600'>
+				<aside className='items-center grid-flow-col '>
 					<Image src='/images/logo.png' alt='logo' width={50} height={50} />
 					<p>
 						GreenLife Grocer &copy; 2024 <br />

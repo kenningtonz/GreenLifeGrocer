@@ -1,95 +1,114 @@
 import styles from "./page.module.css";
-import Link from "next/link";
+
+import Departments from "@/components/departments";
 import Image from "next/image";
 import ProductCard from "@/components/productCard";
-
-let departments = [
-	{ name: "Produce", image: "/images/departments/produce.png" },
-	{ name: "Pantry", image: "/images/departments/pantry.png" },
-	{ name: "Bakery", image: "/images/departments/bakery.png" },
-	{ name: "Dairy & Eggs", image: "/images/departments/dairyandeggs.png" },
-	{ name: "Meat & Seafood", image: "/images/departments/meat.png" },
-	{ name: "Frozen", image: "/images/departments/frozen.png" },
-	{ name: "Household", image: "/images/departments/household.png" },
-	{ name: "Health & Beauty", image: "/images/departments/health.png" },
-	{ name: "Other", image: "/images/departments/other.png" },
-];
+import { Button } from "@/components/ui/button";
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious,
+} from "@/components/ui/carousel";
+import Hero from "@/components/hero";
+import { Suspense } from "react";
 
 export default function Home() {
 	return (
 		<main className={styles.main}>
-			<section className='hero'>
-				<Image src='/hero.png' alt='hero' width={1920} height={1080} />
-			</section>
-			<section className='flex align-center p-1 hero2'>
-				<h2 className='fontSpecial text-3xl text-right child30'>
-					Nourishing Your Body, Nurturing the Planet
-				</h2>
-				<div className='child30 text-center'>
-					<Image
-						src='/images/logo.png'
-						alt='logo'
-						width={173}
-						height={208}
-						fill={false}
-					/>
-				</div>
-				<h1 className='child30 fontSpecial text-3xl'>GreenLife Grocer</h1>
-			</section>
-			<section className={`flex gap-1 flex-wrap p-2 justify-evenly bg-half-green`}>
-				<h2 className='text-3xl text-center child100'>Featured Products</h2>
-				<ProductCard
-					upc='16000329904'
-					name='Frosting, Butter Cream'
-					cost='2.99'
-					brand='Betty Crocker'
-				/>
-				<ProductCard
-					upc='34000146000'
-					name='Milk Chocolate Chips'
-					cost='2.99'
-					brand="Hershey's"
-				/>
-				<ProductCard
-					upc='43000253403'
-					name='Baking Chocolate Squares, Semi-Sweet'
-					cost='2.99'
-					brand="Baker's"
-				/>
-				<ProductCard
-					upc='16000409897'
-					name='Cake Mix, Chocolate Fudge'
-					cost='2.99'
-					brand='Betty Crocker'
-				/>
+			<section className='w-full '>
+				<Carousel className='w-full ' opts={{ loop: true }}>
+					<CarouselContent>
+						<CarouselItem>
+							<Hero
+								image='/hero.png'
+								content={
+									<>
+										<h1 className='mb-5 text-5xl font-bold fontSpecial text-green-900'>
+											GreenLife Grocer
+										</h1>
+										<h2 className='fontSpecial text-3xl text-green'>
+											Nourishing Your Body, Nurturing the Planet
+										</h2>
+									</>
+								}
+							/>
+						</CarouselItem>
+						<CarouselItem>
+							<Hero
+								image='/hero2.jpg'
+								content={
+									<>
+										<Image
+											className='text-center'
+											src='/images/logo.png'
+											alt='logo'
+											width={173}
+											height={208}
+											fill={false}
+										/>
+										<Button className='shadow-md'> Shop all Products</Button>
+									</>
+								}
+							/>
+						</CarouselItem>
+						<CarouselItem>
+							<Hero
+								image='/hero3.jpg'
+								content={
+									<>
+										<h2 className='fontSpecial text-3xl text-green-900'>
+											Your Gateway to Sustainable Shopping
+										</h2>
+										<p className='text-xl'>
+											At GreenLife Grocer, we believe in more than just filling your pantry
+											– we're dedicated to cultivating a greener tomorrow while nourishing
+											you today.
+										</p>
+									</>
+								}
+							/>
+						</CarouselItem>
+					</CarouselContent>
+					<CarouselPrevious variant='green' />
+					<CarouselNext variant='green' />
+				</Carousel>
 			</section>
 
-			<section>
-				<h2 className='text-3xl text-center child100'>Departments</h2>
-				<ul className='flex gap-1 flex-wrap p-o5'>
-					{departments.map((department) => {
-						return (
-							<li
-								className='child30 h-[140px] relative shadow-md rounded-xl'
-								key={department.name}
-							>
-								<Link href={`/departments/${department.name}`}>
-									<h3 className='text-2xl text-white absolute text-center w-full top-[40%]'>
-										{department.name}
-									</h3>
-									<Image
-										className='w-full'
-										src={department.image}
-										alt={department.name}
-										width={480}
-										height={300}
-									/>
-								</Link>
-							</li>
-						);
-					})}
-				</ul>
+			<section className={`mt-12 mb-8 w-full `}>
+				<h2 className='text-3xl text-center text-green-900'>Featured Products</h2>
+				<div className='mt-2 flex gap-4 flex-wrap p-4 justify-evenly bg-half-green'>
+					{/* <ProductCard
+						upc='16000329904'
+						name='Frosting, Butter Cream'
+						cost='2.99'
+						brand='Betty Crocker'
+					/>
+					<ProductCard
+						upc='34000146000'
+						name='Milk Chocolate Chips'
+						cost='3.59'
+						brand="Hershey's"
+					/>
+					<ProductCard
+						upc='43000253403'
+						name='Baking Chocolate Squares, Semi-Sweet'
+						cost='2.59'
+						brand="Baker's"
+					/>
+					<ProductCard
+						upc='16000409897'
+						name='Cake Mix, Chocolate Fudge'
+						cost='3.49'
+						brand='Betty Crocker'
+					/> */}
+				</div>
 			</section>
+
+			<Suspense fallback={<div>Loading...</div>}>
+				<Departments />
+			</Suspense>
 		</main>
 	);
 }
