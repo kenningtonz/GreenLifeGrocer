@@ -1,8 +1,9 @@
 import styles from "./page.module.css";
 
-import Departments from "@/components/departments";
+import { getSessionCookie } from "@/lib/classes/cookies";
+import DepartmentsList from "@/components/departmentsList";
 import Image from "next/image";
-import ProductCard from "@/components/productCard";
+// import ProductCard from "@/components/productCard";
 import { Button } from "@/components/ui/button";
 import {
 	Carousel,
@@ -13,8 +14,11 @@ import {
 } from "@/components/ui/carousel";
 import Hero from "@/components/hero";
 import { Suspense } from "react";
+import { getSession } from "@/lib/classes/user";
 
 export default function Home() {
+	const session = getSessionCookie();
+	console.log(session);
 	return (
 		<main className={styles.main}>
 			<section className='w-full '>
@@ -107,7 +111,7 @@ export default function Home() {
 			</section>
 
 			<Suspense fallback={<div>Loading...</div>}>
-				<Departments />
+				<DepartmentsList />
 			</Suspense>
 		</main>
 	);

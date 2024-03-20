@@ -11,7 +11,7 @@ const Breadcrumbs = ({ sameSize, paths, className }) => {
 	let linkClasses =
 		"focus-visible:outline-none flex cursor-pointer items-center [@media(hover:hover)]:hover:underline focus:outline-none";
 	return (
-		<div className={` text-sm max-w-full ${className}`}>
+		<div className={` text-sm max-w-full ${className} text-green-800`}>
 			<ul
 				key={"breadcrumbs"}
 				className='min-h-min flex flex-wrap items-center whitespace-nowrap gap-y-2'
@@ -32,6 +32,8 @@ const Breadcrumbs = ({ sameSize, paths, className }) => {
 								className={`${
 									index == paths.length - 1 && !sameSize
 										? " w-full font-bold text-xl text-green-900 flex100"
+										: index == paths.length - 1
+										? "text-green-900"
 										: null
 								} flex items-center`}
 							>

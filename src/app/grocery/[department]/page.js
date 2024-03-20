@@ -1,7 +1,9 @@
-import Departments from "@/components/departmentsPage";
+import GroceryPage from "@/components/groceryPage";
 
 const Page = ({ params }) => {
-	return <Departments departmentURL={params.department} subDepartmentURL={null}/>;
+	return (
+		<GroceryPage departmentURL={params.department} subDepartmentURL={null} />
+	);
 };
 
 export default Page;

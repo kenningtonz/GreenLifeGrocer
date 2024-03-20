@@ -10,7 +10,7 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from "@/components/ui/pagination";
-import ProductCard from "@/components/productCard";
+import ProductCard from "@/components/products/productCard";
 
 const PagedProducts = (products, productsPerPage) => {
 	const pagedProducts = [];
@@ -43,7 +43,7 @@ const SortProducts = (products, sort) => {
 	return sortedProducts;
 };
 
-const Products = ({ products }) => {
+const ProductsPaged = ({ products }) => {
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 	const sort =
@@ -66,26 +66,23 @@ const Products = ({ products }) => {
 
 	// const numOfPages = Math.ceil(products.length / productsPerPage);
 	return (
-		<section className='p-4 bg-green-gradient'>
+		<section className='p-4 px-8 bg-green-gradient'>
 			{currentPage > pagedProducts.length ? (
 				<p>no products</p>
 			) : (
 				<>
-					<ul className='flex flex-wrap gap-4 py-4'>
-						{pagedProducts[currentPage - 1].map((product) => {
+					<div className='flex flex-wrap gap-6'>
+						{pagedProducts[currentPage - 1].map((product, index) => {
 							return (
 								<ProductCard
-									upc={product.upc}
-									url={product.url}
-									name={product.product_name}
-									cost={product.avg_price}
-									brand={product.brand}
-									category_url={product.category_url}
-									family_url={product.family_url}
+									product={product}
+									index={index}
+									className={"flex-1"}
+									small={false}
 								/>
 							);
 						})}
-					</ul>
+					</div>
 
 					<Pagination className='my-4'>
 						<PaginationContent>
@@ -112,4 +109,4 @@ const Products = ({ products }) => {
 	);
 };
 
-export default Products;
+export default ProductsPaged;

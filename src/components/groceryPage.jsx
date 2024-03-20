@@ -1,7 +1,6 @@
 import { getProducts } from "@/lib/classes/category";
 
-import Products from "@/components/products";
-
+import ProductsPaged from "@/components/products/productsPaged";
 import Breadcrumbs from "@/components/breadcrumbs";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -10,7 +9,7 @@ import Search from "@/components/search";
 
 import { getCategories, getFamilies } from "@/lib/classes/category";
 
-export default async function Departments({ departmentURL, subDepartmentURL }) {
+export default async function GroceryPage({ departmentURL, subDepartmentURL }) {
 	const departments = await getCategories();
 
 	const activeDepartment = departments.find(
@@ -78,12 +77,14 @@ export default async function Departments({ departmentURL, subDepartmentURL }) {
 					}
 				/>
 
-				<section className='p-4 flex flex-col gap-4 items-end'>
+				<section className='p-6 flex flex-col gap-4 items-end'>
 					<Search />
 					<SortSelect />
 				</section>
 			</section>
-			{activeDepartment != undefined ? <Products products={products} /> : null}
+			{activeDepartment != undefined ? (
+				<ProductsPaged products={products} />
+			) : null}
 		</main>
 	);
 }

@@ -23,13 +23,13 @@ const InputWithIconButton = React.forwardRef(
 			<form
 				onSubmit={onSubmit}
 				className={cn(
-					"flex w-full join max-w-sm items-center shadow-md shadow-pink-500/50 rounded-md focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2",
+					"flex w-full join max-w-sm items-center shadow shadow-pink-500 rounded-md focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2",
 					className
 				)}
 			>
 				<input
 					type={type}
-					className='flex h-10 w-full rounded-md join-item bg-pink-200  px-3 py-2 text-sm  placeholder:text-neutral-500 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50'
+					className='flex h-10 w-full rounded-md join-item bg-pink  px-3 py-2 text-sm  placeholder:text-pink-800/80 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50'
 					ref={ref}
 					{...props}
 				/>

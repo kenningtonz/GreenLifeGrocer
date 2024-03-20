@@ -1,9 +1,9 @@
-import Departments from "@/components/departmentsList";
+import DepartmentsList from "@/components/departmentsList";
 
 const Grocery = () => {
 	return (
 		<main>
-			<Departments />
+			<DepartmentsList />
 		</main>
 	);
 };

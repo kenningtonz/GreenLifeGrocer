@@ -1,10 +1,10 @@
-import Departments from "@/components/departmentsPage";
+import GroceryPage from "@/components/groceryPage";
 
 const Page = ({ params }) => {
 	const departmentURL = params.department;
 	const subDepartmentURL = params.sub;
 	return (
-		<Departments
+		<GroceryPage
 			departmentURL={departmentURL}
 			subDepartmentURL={subDepartmentURL}
 		/>

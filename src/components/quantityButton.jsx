@@ -2,17 +2,19 @@
 import { Plus, Minus } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import groceryStore from "@/lib/classes/store";
 
-export function QuantityButton() {
+export function QuantityButton({ className, product }) {
 	const [quantity, setQuantity] = useState(1);
-
+	const addToCart = groceryStore((state) => state.addToCart);
 	return (
-		<div className='flex gap-1 items-center'>
+		<div className={`justify-end flex gap-1 px-4 items-center ${className}`}>
 			<Button
 				variant='ghost'
 				disabled={quantity === 1}
 				size='icon'
 				onClick={() => {
+					addToCart(product, quantity - 1 < 1 ? 1 : quantity - 1);
 					setQuantity(quantity - 1 < 1 ? 1 : quantity - 1);
 				}}
 			>
@@ -22,9 +24,10 @@ export function QuantityButton() {
 				{quantity}
 			</p>
 			<Button
-				variant='ghostWhite'
+				variant='ghost'
 				size='icon'
 				onClick={() => {
+					addToCart(product, quantity + 1);
 					setQuantity(quantity + 1);
 				}}
 			>

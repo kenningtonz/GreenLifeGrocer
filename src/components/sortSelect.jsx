@@ -25,7 +25,7 @@ const SortSelect = () => {
 
 	return (
 		<Select
-			className=' '
+			className='w-[180px] '
 			onValueChange={(value) =>
 				router.push(pathname + "?" + createQueryString("sort", value))
 			}

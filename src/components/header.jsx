@@ -6,19 +6,28 @@ const Header = () => {
 		<header className='bg-green-900'>
 			<nav className='flex justify-between items-center px-4 py-2 text-white'>
 				<Link href='/' className='flex gap-4 items-center '>
-					<Image src='/images/logo.png' alt='logo' width={50} height={50} />
+					<Image
+						src='/images/logo.png'
+						alt='logo'
+						width={50}
+						height={50}
+						className='h-auto'
+					/>
 					<p className='text-2xl fontSpecial'>GreenLife Grocer</p>
 				</Link>
 				<ul className='flex gap-4 text-lg'>
 					<li>
-						<Link href='/products'>Products</Link>
+						<Link href='/grocery'>Grocery</Link>
 					</li>
 					<li>
-						<Link href='account/login'>Login</Link>
+						<Link href='/account/login'>Login</Link>
 					</li>
-					{/* <li>
+					<li>
+						<Link href='/account'>Account</Link>
+					</li>
+					<li>
 						<Link href='/cart'>Cart</Link>
-					</li> */}
+					</li>
 					{/* <li>
                         <Link href="/account">Account</Link>
                     </li> */}

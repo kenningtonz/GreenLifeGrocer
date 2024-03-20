@@ -1,12 +1,12 @@
 import "./globals.css";
 import "./reset.css";
 import "@/css/join.css";
-import "@/css/breadcrumbs.css";
 import "@/css/join.css";
 import "@/css/link.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import { departmentInit } from "@/lib/classes/category";
+import { getSession } from "@/lib/classes/user";
+
 export const metadata = {
 	title: "GreenLife Grocer",
 	description: "Grocery Store",
@@ -15,7 +15,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
 	return (
 		<html lang='en'>
-			<body>
+			<body className='body'>
 				<Header />
 				{children}
 				<Footer />
