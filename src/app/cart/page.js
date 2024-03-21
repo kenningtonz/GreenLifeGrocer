@@ -1,30 +1,35 @@
-import { getCart } from "@/lib/classes/cart";
+"use client";
+import { getCart, addToCart } from "@/lib/classes/cart";
 import { QuantityButton } from "@/components/quantityButton";
 import Image from "next/image";
 import { Button, ButtonIcon } from "@/components/ui/button";
 import Link from "next/link";
 import { isSessionValid } from "@/lib/classes/user";
+import groceryStore from "@/lib/classes/store";
+
 export default function Cart() {
+	const cart = groceryStore((state) => state.cart);
+
 	// const cart = getCart();
 
-	const cart = [
-		{
-			product: {
-				product_name: "Frosting, Butter Cream",
-				brand: "Betty Crocker",
-				avg_price: 2.99,
-				image: "/images/products/16000329904.jpg",
-				taxable: true,
-				upc: "16000329904",
-				url: "frostingbuttercream",
-				category_url: "baking",
-				family_url: "frosting",
-			},
-			quantity: 1,
-		},
-	];
+	// const cart = [
+	// 	{
+	// 		product: {
+	// 			product_name: "Frosting, Butter Cream",
+	// 			brand: "Betty Crocker",
+	// 			avg_price: 2.99,
+	// 			image: "/images/products/16000329904.jpg",
+	// 			taxable: true,
+	// 			upc: "16000329904",
+	// 			url: "frostingbuttercream",
+	// 			category_url: "baking",
+	// 			family_url: "frosting",
+	// 		},
+	// 		quantity: 1,
+	// 	},
+	// ];
 
-	if (cart.length === 0) {
+	if (Object.keys(cart).length === 0) {
 		return (
 			<main className='p-4'>
 				<h1 className='text-xl text-center'>Your Cart</h1>
@@ -93,7 +98,11 @@ export default function Cart() {
 								</td>
 								<td className='p-2'>{product.avg_price}</td>
 								<td className='p-2'>
-									<QuantityButton className={"max-w-48"} product={product} />
+									<QuantityButton
+										className={"max-w-48"}
+										product={product}
+										isCart={true}
+									/>
 								</td>
 								<td className='p-2'>{product.avg_price * quantity}</td>
 								<td className='p-2'>{product.taxable ? "Y" : "N"}</td>

@@ -23,10 +23,10 @@ export async function getProducts(category, family = null) {
 	}).then((res) => res.json().then((data) => data.products));
 }
 
-export async function getProduct(upc) {
+export async function getProduct(url) {
 	return fetch("https://test.kennedyadams.ca/services/get_product.php", {
 		method: "POST",
-		body: JSON.stringify({ upc: upc }),
+		body: JSON.stringify({ url: url }),
 		headers: {
 			accept: "application/json",
 			"Content-Type": "application/json",

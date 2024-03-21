@@ -10,7 +10,7 @@ const buttonVariants = cva(
 		variants: {
 			variant: {
 				default:
-					"shadow-pink-500/50  bg-pink-200 text-pink-500  hover:bg-pink-200/90",
+					"shadow-pink-500  bg-pink text-pink-900  hover:bg-pink/80 active:translate-y-[2px] active:shadow-none ",
 				green:
 					"bg-olive/80 text-green-900 hover:bg-olive/90 data-[active=true]:bg-green data-[active=true]:text-white",
 				outline:
@@ -55,4 +55,43 @@ const Button = React.forwardRef(
 );
 Button.displayName = "Button";
 
-export { Button, buttonVariants };
+const ButtonIcon = React.forwardRef(
+	({ className, size = 32, icon = "add", ...props }, ref) => {
+		return (
+			<button
+				title={icon}
+				aria-label={icon}
+				className={`${className} cursor-pointer outline-none w-min h-min `}
+				ref={ref}
+				{...props}
+			>
+				<svg
+					xmlns='http://www.w3.org/2000/svg'
+					width={size}
+					height={size}
+					viewBox='0 0 24 24'
+					className='hover:rotate-90  stroke-pink-400 fill-none hover:fill-pink-800 group-active:stroke-purple-200 active:fill-pink-600 active:duration-0 duration-300'
+				>
+					<path
+						d='M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z'
+						strokeWidth='1.5'
+					></path>
+					{icon === "add" ? (
+						<>
+							<path d='M12 8V16' strokeWidth='1.5'></path>
+							<path d='M8 12H16' strokeWidth='1.5'></path>
+						</>
+					) : icon === "remove" ? (
+						<>
+							<path d='M 14.8 9.2 L 9.2 14.8' strokeWidth='1.5'></path>
+							<path d='M 9.2 9.2 L 14.8 14.8' strokeWidth='1.5'></path>
+						</>
+					) : null}
+				</svg>
+			</button>
+		);
+	}
+);
+ButtonIcon.displayName = "ButtonIcon";
+
+export { Button, buttonVariants, ButtonIcon };

@@ -41,7 +41,7 @@ const CreateAccount = () => {
 					<Input type='email' id='email' placeholder='Email' required />
 					<Input type='password' id='password' placeholder='Password' required />
 					<p className='text-sm text-red-800'>{error}</p>
-					<Button variant='green' type='submit'>
+					<Button variant='greenDark' type='submit'>
 						Create Account
 					</Button>
 					<div className='flex items-center justify-between flex-wrap'>

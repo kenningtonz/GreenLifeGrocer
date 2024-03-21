@@ -2,11 +2,51 @@
 import { Plus, Minus } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import groceryStore from "@/lib/classes/store";
+import { addToCart } from "@/lib/classes/cart";
 
-export function QuantityButton({ className, product }) {
+import AddToCartButton from "@/components/addToCartButton";
+
+export function QuantityButton({ className, product, isCart }) {
 	const [quantity, setQuantity] = useState(1);
-	const addToCart = groceryStore((state) => state.addToCart);
+
+	if (isCart) {
+		return (
+			<span className='flex justify-between'>
+				<div className={`justify-end flex gap-1 px-4 items-center ${className}`}>
+					<Button
+						variant='ghost'
+						disabled={quantity === 1}
+						size='icon'
+						onClick={() => {
+							setQuantity(quantity - 1 < 1 ? 1 : quantity - 1);
+						}}
+					>
+						<Minus className='h-6 w-6' />
+					</Button>
+					<p className='rounded-md text-2xl text-center bg-white h-8 w-8 text-green-900'>
+						{quantity}
+					</p>
+					<Button
+						variant='ghost'
+						size='icon'
+						onClick={() => {
+							setQuantity(quantity + 1);
+						}}
+					>
+						<Plus className='h-6 w-6' />
+					</Button>
+				</div>
+
+				<AddToCartButton
+					className='shadow-md child50'
+					product={product}
+					quantity={quantity}
+					isIcon={false}
+				/>
+			</span>
+		);
+	}
+
 	return (
 		<div className={`justify-end flex gap-1 px-4 items-center ${className}`}>
 			<Button
@@ -15,7 +55,6 @@ export function QuantityButton({ className, product }) {
 				size='icon'
 				onClick={() => {
 					addToCart(product, quantity - 1 < 1 ? 1 : quantity - 1);
-					setQuantity(quantity - 1 < 1 ? 1 : quantity - 1);
 				}}
 			>
 				<Minus className='h-6 w-6' />
@@ -28,7 +67,6 @@ export function QuantityButton({ className, product }) {
 				size='icon'
 				onClick={() => {
 					addToCart(product, quantity + 1);
-					setQuantity(quantity + 1);
 				}}
 			>
 				<Plus className='h-6 w-6' />

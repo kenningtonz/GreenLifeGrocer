@@ -6,6 +6,7 @@ import "@/css/link.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { getSession } from "@/lib/classes/user";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata = {
 	title: "GreenLife Grocer",
@@ -19,6 +20,7 @@ export default function RootLayout({ children }) {
 				<Header />
 				{children}
 				<Footer />
+				<Toaster />
 			</body>
 		</html>
 	);

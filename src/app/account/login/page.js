@@ -8,12 +8,15 @@ import { setSessionCookie, getSessionCookie } from "@/lib/classes/cookies";
 import { useRouter } from "next/navigation";
 import groceryStore from "@/lib/classes/store";
 
+import { useForm } from "react-hook-form";
+
 const Login = () => {
 	const router = useRouter();
 	const setEmail = groceryStore((state) => state.setEmail);
 	const setUser = groceryStore((state) => state.setUser);
 	const setActiveSession = groceryStore((state) => state.setActiveSession);
 	const [error, setError] = useState("");
+
 	async function handleSubmit(e) {
 		e.preventDefault();
 		const form = e.target;

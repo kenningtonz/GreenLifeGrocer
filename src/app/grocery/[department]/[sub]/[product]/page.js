@@ -9,9 +9,9 @@ import ProductsCarousel from "@/components/products/productsCarousel";
 
 async function Product({ params }) {
 	const url = params.product;
-	const upc = url.split("_")[1];
 
-	const product = await getProduct(upc);
+	const product = await getProduct(url);
+	console.log(product);
 
 	if (product.error.id != "0") {
 		return (
@@ -27,6 +27,7 @@ async function Product({ params }) {
 		);
 	}
 	const {
+		upc,
 		product_name,
 		brand,
 		avg_price,
@@ -76,13 +77,8 @@ async function Product({ params }) {
 				<Rating num={stars} />
 
 				<p className='text-right text-2xl'>${avg_price}</p>
-				<span className='flex justify-between'>
-					<QuantityButton className='child50' />
 
-					<Button variant='default' className='shadow-md child50'>
-						Add to Cart
-					</Button>
-				</span>
+				<QuantityButton className='child50' isCart={false} />
 			</section>
 			<section className='child100  p-4 rounded-2xl shadow-md bg-olive-200 shadow-olive-600/50'>
 				<p className='text-base'>{product_description}</p>

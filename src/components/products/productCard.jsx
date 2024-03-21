@@ -1,8 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { Button, ButtonIcon } from "@/components/ui/button";
-import { addToCart } from "@/lib/classes/cart";
+import AddToCartButton from "@/components/addToCartButton";
 
 const ProductCard = ({ product, className, small, index }) => {
 	const {
@@ -23,7 +22,7 @@ const ProductCard = ({ product, className, small, index }) => {
 			className={` flex flex-col justify-between p-3 ${className} ${
 				small ? "min-w-36 max-w-48" : "min-w-48 max-w-64"
 			} hover:scale-105   bg-white  transition-all  rounded-2xl shadow-md shadow-olive-400/50 hover:shadow-olive-400`}
-			href={`/grocery/${category_url}/${family_url}/${url.toLowerCase()}_${upc}`}
+			href={`/grocery/${category_url}/${family_url}/${url}`}
 		>
 			<Image
 				className={`rounded-md w-auto bg-white object-contain ${
@@ -48,20 +47,19 @@ const ProductCard = ({ product, className, small, index }) => {
 			{small ? (
 				<spa className='flex justify-between'>
 					<p className='text-olive-700  mt-2 text-base'>${avg_price}</p>
-					<ButtonIcon icon={"add"} onClick={() => addToCart(product, 1)} />
+					<AddToCartButton product={product} quantity={1} isIcon={true} />
 				</spa>
 			) : (
 				<>
 					<p className='text-olive-700  mt-2 text-base'>
 						${avg_price} per {unit}
 					</p>
-					<Button
-						variant='default'
+					<AddToCartButton
 						className='shadow w-full self-end mt-2'
-						onClick={() => addToCart(product, 1)}
-					>
-						Quick Add to Cart
-					</Button>
+						product={product}
+						quantity={1}
+						isIcon={false}
+					/>
 				</>
 			)}
 		</Link>
