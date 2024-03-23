@@ -1,4 +1,3 @@
-import Image from "next/image";
 import "@/css/footer.css";
 import Link from "next/link";
 
@@ -29,7 +28,7 @@ const Footer = () => {
 			</footer>
 			<footer className='footer px-10 py-4 border-t bg-green-900 text-green-100 border-green-600'>
 				<aside className='items-center grid-flow-col '>
-					<Image src='/images/logo.png' alt='logo' width={50} height={50} />
+					<img src='/images/logo.png' alt='logo' width={50} height={50} />
 					<p>
 						GreenLife Grocer &copy; 2024 <br />
 						Nourishing You Body, Nurturing the Planet

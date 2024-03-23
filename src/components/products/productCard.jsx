@@ -1,13 +1,13 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
-import AddToCartButton from "@/components/addToCartButton";
+import { AddToCartButton } from "@/components/cartButtons";
 
 const ProductCard = ({ product, className, small, index }) => {
 	const {
 		product_name,
 		brand,
 		avg_price,
+		id,
 		stars,
 		category_url,
 		upc,
@@ -24,7 +24,7 @@ const ProductCard = ({ product, className, small, index }) => {
 			} hover:scale-105   bg-white  transition-all  rounded-2xl shadow-md shadow-olive-400/50 hover:shadow-olive-400`}
 			href={`/grocery/${category_url}/${family_url}/${url}`}
 		>
-			<Image
+			<img
 				className={`rounded-md w-auto bg-white object-contain ${
 					small ? "h-20" : "h-32"
 				} h-auto`}
@@ -45,10 +45,10 @@ const ProductCard = ({ product, className, small, index }) => {
 			</h4>
 
 			{small ? (
-				<spa className='flex justify-between'>
+				<span className='flex justify-between'>
 					<p className='text-olive-700  mt-2 text-base'>${avg_price}</p>
-					<AddToCartButton product={product} quantity={1} isIcon={true} />
-				</spa>
+					<AddToCartButton id={id} name={product_name} quantity={1} isIcon={true} />
+				</span>
 			) : (
 				<>
 					<p className='text-olive-700  mt-2 text-base'>
@@ -56,7 +56,8 @@ const ProductCard = ({ product, className, small, index }) => {
 					</p>
 					<AddToCartButton
 						className='shadow w-full self-end mt-2'
-						product={product}
+						id={id}
+						name={product_name}
 						quantity={1}
 						isIcon={false}
 					/>

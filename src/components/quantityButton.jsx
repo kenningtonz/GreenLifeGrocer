@@ -4,12 +4,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { addToCart } from "@/lib/classes/cart";
 
-import AddToCartButton from "@/components/addToCartButton";
+import { AddToCartButton } from "@/components/cartButtons";
 
-export function QuantityButton({ className, product, isCart }) {
+export function QuantityButton({ className, id, name, isCart }) {
 	const [quantity, setQuantity] = useState(1);
-
-	if (isCart) {
+	// console.log(product);
+	if (!isCart) {
 		return (
 			<span className='flex justify-between'>
 				<div className={`justify-end flex gap-1 px-4 items-center ${className}`}>
@@ -39,7 +39,8 @@ export function QuantityButton({ className, product, isCart }) {
 
 				<AddToCartButton
 					className='shadow-md child50'
-					product={product}
+					id={id}
+					name={name}
 					quantity={quantity}
 					isIcon={false}
 				/>
@@ -54,7 +55,8 @@ export function QuantityButton({ className, product, isCart }) {
 				disabled={quantity === 1}
 				size='icon'
 				onClick={() => {
-					addToCart(product, quantity - 1 < 1 ? 1 : quantity - 1);
+					setQuantity(quantity - 1 < 1 ? 1 : quantity - 1);
+					addToCart(id, quantity - 1 < 1 ? 1 : quantity - 1);
 				}}
 			>
 				<Minus className='h-6 w-6' />
@@ -66,7 +68,8 @@ export function QuantityButton({ className, product, isCart }) {
 				variant='ghost'
 				size='icon'
 				onClick={() => {
-					addToCart(product, quantity + 1);
+					setQuantity(quantity + 1);
+					addToCart(id, quantity + 1);
 				}}
 			>
 				<Plus className='h-6 w-6' />

@@ -1,12 +1,11 @@
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { QuantityButton } from "@/components/quantityButton";
-import { getProduct, getProducts } from "@/lib/classes/category";
+import { getProduct, getProducts } from "@/lib/classes/product";
 import Link from "next/link";
 import Breadcrumbs from "@/components/breadcrumbs";
 import Rating from "@/components/rating";
 import ProductsCarousel from "@/components/products/productsCarousel";
-
+import { Suspense } from "react";
 async function Product({ params }) {
 	const url = params.product;
 
@@ -37,17 +36,19 @@ async function Product({ params }) {
 		family_name,
 		category_url,
 		family_url,
+		family_id,
+		category_id,
 	} = product.products[0];
 
-	const similarProducts = await getProducts(0, product.products[0].family_id);
-	console.log(product);
+	const similarProducts = await getProducts(category_id, family_id);
+	// console.log(product);
 
-	console.log(similarProducts);
+	// console.log(similarProducts);
 
 	const rating = [];
 	for (let i = 0; i < stars; i++) {
 		rating.push(
-			<Image key={i} src='/images/star.svg' alt='star' width={30} height={30} />
+			<img key={i} src='/images/star.svg' alt='star' width={30} height={30} />
 		);
 	}
 	return (
@@ -63,7 +64,7 @@ async function Product({ params }) {
 				className={"child100 mb-8"}
 			/>
 
-			<Image
+			<img
 				className='child30 object-contain h-auto '
 				src={`/images/product/${upc.slice(0, 4)}/${upc}.jpg`}
 				alt={product_name}
@@ -78,7 +79,11 @@ async function Product({ params }) {
 
 				<p className='text-right text-2xl'>${avg_price}</p>
 
-				<QuantityButton className='child50' isCart={false} />
+				<QuantityButton
+					className='child50'
+					isCart={false}
+					product={product.products[0]}
+				/>
 			</section>
 			<section className='child100  p-4 rounded-2xl shadow-md bg-olive-200 shadow-olive-600/50'>
 				<p className='text-base'>{product_description}</p>
@@ -86,9 +91,13 @@ async function Product({ params }) {
 
 			<section className='child100 mt-8 '>
 				<h2 className='text-2xl text-green-900'>Similar Products</h2>
-				<ProductsCarousel
-					products={similarProducts.filter((product) => product.upc != upc)}
-				/>
+				<Suspense fallback='loading...'>
+					<ProductsCarousel
+						products={similarProducts.products.filter(
+							(product) => product.upc != upc
+						)}
+					/>
+				</Suspense>
 			</section>
 		</main>
 	);

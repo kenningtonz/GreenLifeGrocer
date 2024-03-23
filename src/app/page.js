@@ -2,7 +2,6 @@ import styles from "./page.module.css";
 
 import { getSessionCookie } from "@/lib/classes/cookies";
 import DepartmentsList from "@/components/departmentsList";
-import Image from "next/image";
 // import ProductCard from "@/components/productCard";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,8 +16,8 @@ import { Suspense } from "react";
 import { getSession } from "@/lib/classes/user";
 
 export default function Home() {
-	const session = getSessionCookie();
-	console.log(session);
+	// const session = getSessionCookie();
+	// console.log(session);
 	return (
 		<main className={styles.main}>
 			<section className='w-full '>
@@ -44,13 +43,12 @@ export default function Home() {
 								image='/hero2.jpg'
 								content={
 									<>
-										<Image
+										<img
 											className='text-center'
 											src='/images/logo.png'
 											alt='logo'
 											width={173}
 											height={208}
-											fill={false}
 										/>
 										<Button className='shadow-md'> Shop all Products</Button>
 									</>
@@ -67,7 +65,7 @@ export default function Home() {
 										</h2>
 										<p className='text-xl'>
 											At GreenLife Grocer, we believe in more than just filling your pantry
-											– we're dedicated to cultivating a greener tomorrow while nourishing
+											– were dedicated to cultivating a greener tomorrow while nourishing
 											you today.
 										</p>
 									</>

@@ -1,5 +1,4 @@
 import { getFamilies, getCategories } from "@/lib/classes/category";
-import Image from "next/image";
 import Link from "next/link";
 async function DepartmentsList() {
 	const categories = await getCategories();

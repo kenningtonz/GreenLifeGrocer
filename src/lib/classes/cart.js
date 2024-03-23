@@ -1,26 +1,50 @@
 import { unstable_batchedUpdates } from "react-dom";
 import groceryStore from "./store";
 
-export const addToCart = (product, quantity) => {
+import { db, dbBody } from "@/lib/db";
+
+export const addToCart = (id, quantity) => {
 	let cart;
 	unstable_batchedUpdates(() => {
 		cart = groceryStore.getState().cart;
 	});
+	//cart is array
 
-	if (cart[product.upc]) {
-		cart[product.upc].quantity += quantity;
+	if (cart.map((item) => item.id).includes(id)) {
+		const index = cart.findIndex((item) => item.id === id);
+		cart[index].quantity += quantity;
 	} else {
-		cart[product.upc] = { product, quantity };
+		cart.push({ id, quantity });
 	}
+
 	groceryStore.setState({ cart: cart });
 };
 
-export const removeFromCart = (product) => {
-	let cart;
+export const removeFromCart = (id) => {
+	let cartArray;
 	unstable_batchedUpdates(() => {
-		cart = groceryStore.getState().cart;
+		cartArray = groceryStore.getState().cartArray;
 	});
 
-	delete cart[product.upc];
-	groceryStore.setState({ cart: cart });
+	const index = cartArray.findIndex((item) => item.id === id);
+	cartArray.splice(index, 1);
+
+	groceryStore.setState({ cartArray: cartArray });
 };
+
+export async function getProductsByCart(cartArray) {
+	return fetch(
+		`${db}/get_products_by_cart.php`,
+		dbBody({
+			cart: cartArray,
+		})
+	).then((res) => res.json());
+}
+
+// export async function getCart() {
+// 	return await getCookie("cart");
+// }
+
+// export async function setCart(cart) {
+// 	return await setCookie("cart", cart, 60 * 60 * 24);
+// }

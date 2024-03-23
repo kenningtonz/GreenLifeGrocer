@@ -74,12 +74,14 @@ const ProductsPaged = ({ products }) => {
 					<div className='flex flex-wrap gap-6'>
 						{pagedProducts[currentPage - 1].map((product, index) => {
 							return (
-								<ProductCard
-									product={product}
-									index={index}
-									className={"flex-1"}
-									small={false}
-								/>
+								<div key={`${index}-${product.product_name}`}>
+									<ProductCard
+										product={product}
+										index={index}
+										className={"flex-1"}
+										small={false}
+									/>
+								</div>
 							);
 						})}
 					</div>

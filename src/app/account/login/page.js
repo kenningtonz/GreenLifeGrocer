@@ -68,7 +68,7 @@ const Login = () => {
 							Forgot password?
 						</Link>
 						<p className='text-green-900 mt-4'>
-							Don't have an account?
+							Dont have an account?
 							<Link
 								href='/account/create'
 								className='ml-1 text-sm text-green-500  hover:underline'

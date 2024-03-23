@@ -1,35 +1,32 @@
 "use client";
-import { getCart, addToCart } from "@/lib/classes/cart";
+import { getCart, addToCart, getProductsByCart } from "@/lib/classes/cart";
 import { QuantityButton } from "@/components/quantityButton";
 import Image from "next/image";
 import { Button, ButtonIcon } from "@/components/ui/button";
 import Link from "next/link";
 import { isSessionValid } from "@/lib/classes/user";
 import groceryStore from "@/lib/classes/store";
+import { RemoveFromCartButton } from "@/components/cartButtons";
+import { useState, useEffect } from "react";
 
 export default function Cart() {
-	const cart = groceryStore((state) => state.cart);
+	const [cart, setCart] = useState([]);
 
-	// const cart = getCart();
+	const cartArray = groceryStore((state) => state.cartArray);
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const result = await getProductsByCart();
+				setCart(result);
+			} catch (error) {
+				console.error("Error fetching data:", error);
+			}
+		};
 
-	// const cart = [
-	// 	{
-	// 		product: {
-	// 			product_name: "Frosting, Butter Cream",
-	// 			brand: "Betty Crocker",
-	// 			avg_price: 2.99,
-	// 			image: "/images/products/16000329904.jpg",
-	// 			taxable: true,
-	// 			upc: "16000329904",
-	// 			url: "frostingbuttercream",
-	// 			category_url: "baking",
-	// 			family_url: "frosting",
-	// 		},
-	// 		quantity: 1,
-	// 	},
-	// ];
+		fetchData();
+	}, [cartArray]);
 
-	if (Object.keys(cart).length === 0) {
+	if (cartArray.length === 0) {
 		return (
 			<main className='p-4'>
 				<h1 className='text-xl text-center'>Your Cart</h1>
@@ -40,7 +37,9 @@ export default function Cart() {
 
 	const subTotal =
 		Math.round(
-			(cart.reduce((acc, item) => acc + item.price, 0) + Number.EPSILON) * 100
+			(cart.reduce((acc, item) => acc + item.price * item.quantity, 0) +
+				Number.EPSILON) *
+				100
 		) / 100;
 
 	const tax =
@@ -71,7 +70,8 @@ export default function Cart() {
 					</tr>
 				</thead>
 				<tbody className=' '>
-					{cart.map((item, index) => {
+					{Object.values(cart).map((item, index) => {
+						console.log(item, index);
 						const { product, quantity } = item;
 						return (
 							<tr
@@ -100,14 +100,15 @@ export default function Cart() {
 								<td className='p-2'>
 									<QuantityButton
 										className={"max-w-48"}
-										product={product}
+										id={product.id}
+										name={product.product_name}
 										isCart={true}
 									/>
 								</td>
 								<td className='p-2'>{product.avg_price * quantity}</td>
 								<td className='p-2'>{product.taxable ? "Y" : "N"}</td>
 								<td className='p-2'>
-									<ButtonIcon icon={"remove"} />
+									<RemoveFromCartButton id={product.id} name={product.product_name} />
 								</td>
 							</tr>
 						);

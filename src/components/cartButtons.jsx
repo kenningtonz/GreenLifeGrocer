@@ -1,8 +1,8 @@
 import { Button, ButtonIcon } from "@/components/ui/button";
-import { addToCart } from "@/lib/classes/cart";
+import { addToCart, removeFromCart } from "@/lib/classes/cart";
 import { useToast } from "@/components/ui/use-toast";
 
-const AddToCartButton = ({ product, quantity, isIcon, className }) => {
+export const AddToCartButton = ({ id, name, quantity, isIcon, className }) => {
 	const { toast } = useToast();
 
 	return (
@@ -12,11 +12,11 @@ const AddToCartButton = ({ product, quantity, isIcon, className }) => {
 					icon='add'
 					onClick={(e) => {
 						e.preventDefault();
-						addToCart(product, quantity);
+						addToCart(id, quantity);
 						toast({
 							variant: "green",
 							title: "Added to Cart",
-							description: product.product_name,
+							description: name,
 						});
 					}}
 				/>
@@ -25,11 +25,11 @@ const AddToCartButton = ({ product, quantity, isIcon, className }) => {
 					className={className}
 					onClick={(e) => {
 						e.preventDefault();
-						addToCart(product, quantity);
+						addToCart(id, quantity);
 						toast({
 							variant: "green",
 							title: "Added to Cart",
-							description: product.product_name,
+							description: name,
 						});
 					}}
 				>
@@ -40,4 +40,20 @@ const AddToCartButton = ({ product, quantity, isIcon, className }) => {
 	);
 };
 
-export default AddToCartButton;
+export const RemoveFromCartButton = ({ id, name }) => {
+	const { toast } = useToast();
+	return (
+		<ButtonIcon
+			icon='remove'
+			onClick={(e) => {
+				e.preventDefault();
+				removeFromCart(id);
+				toast({
+					variant: "pink",
+					title: "Removed from Cart",
+					description: name,
+				});
+			}}
+		/>
+	);
+};

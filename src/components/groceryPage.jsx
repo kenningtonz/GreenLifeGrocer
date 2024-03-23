@@ -1,4 +1,4 @@
-import { getProducts } from "@/lib/classes/category";
+import { getProducts } from "@/lib/classes/product";
 
 import ProductsPaged from "@/components/products/productsPaged";
 import Breadcrumbs from "@/components/breadcrumbs";
@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import SortSelect from "@/components/sortSelect";
 import Search from "@/components/search";
-
+import { Suspense } from "react";
 import { getCategories, getFamilies } from "@/lib/classes/category";
 
 export default async function GroceryPage({ departmentURL, subDepartmentURL }) {
@@ -44,7 +44,6 @@ export default async function GroceryPage({ departmentURL, subDepartmentURL }) {
 			: await getProducts(activeDepartment.id);
 
 	//TODO: if subdepartment is not found
-
 	return (
 		<main>
 			<DepartmentButtons
@@ -83,7 +82,9 @@ export default async function GroceryPage({ departmentURL, subDepartmentURL }) {
 				</section>
 			</section>
 			{activeDepartment != undefined ? (
-				<ProductsPaged products={products} />
+				<Suspense fallback='loading...'>
+					<ProductsPaged products={products.products} />
+				</Suspense>
 			) : null}
 		</main>
 	);
