@@ -6,6 +6,8 @@ import Breadcrumbs from "@/components/breadcrumbs";
 import Rating from "@/components/rating";
 import ProductsCarousel from "@/components/products/productsCarousel";
 import { Suspense } from "react";
+
+import Image from "next/image";
 async function Product({ params }) {
 	const url = params.product;
 
@@ -45,12 +47,6 @@ async function Product({ params }) {
 
 	// console.log(similarProducts);
 
-	const rating = [];
-	for (let i = 0; i < stars; i++) {
-		rating.push(
-			<img key={i} src='/images/star.svg' alt='star' width={30} height={30} />
-		);
-	}
 	return (
 		<main className='bg-white flex gap-4 flex-wrap  p-8 justify-between  mb-8'>
 			<Breadcrumbs
@@ -64,7 +60,7 @@ async function Product({ params }) {
 				className={"child100 mb-8"}
 			/>
 
-			<img
+			<Image
 				className='child30 object-contain h-auto '
 				src={`/images/product/${upc.slice(0, 4)}/${upc}.jpg`}
 				alt={product_name}

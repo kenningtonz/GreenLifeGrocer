@@ -1,6 +1,8 @@
 "use client";
 import Link from "next/link";
 import { AddToCartButton } from "@/components/cartButtons";
+import Image from "next/image";
+import { db } from "@/lib/db";
 
 const ProductCard = ({ product, className, small, index }) => {
 	const {
@@ -24,11 +26,11 @@ const ProductCard = ({ product, className, small, index }) => {
 			} hover:scale-105   bg-white  transition-all  rounded-2xl shadow-md shadow-olive-400/50 hover:shadow-olive-400`}
 			href={`/grocery/${category_url}/${family_url}/${url}`}
 		>
-			<img
+			<Image
 				className={`rounded-md w-auto bg-white object-contain ${
 					small ? "h-20" : "h-32"
 				} h-auto`}
-				src={`/images/product/${upc.slice(0, 4)}/${upc}.jpg`}
+				src={`${db}/images/product/${upc.slice(0, 4)}/${upc}.jpg`}
 				alt={product_name}
 				width={175}
 				height={100}

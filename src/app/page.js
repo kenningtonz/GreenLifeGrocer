@@ -1,5 +1,5 @@
 import styles from "./page.module.css";
-
+import Image from "next/image";
 import { getSessionCookie } from "@/lib/classes/cookies";
 import DepartmentsList from "@/components/departmentsList";
 // import ProductCard from "@/components/productCard";
@@ -43,8 +43,8 @@ export default function Home() {
 								image='/hero2.jpg'
 								content={
 									<>
-										<img
-											className='text-center'
+										<Image
+											className='text-center h-auto'
 											src='/images/logo.png'
 											alt='logo'
 											width={173}

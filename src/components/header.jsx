@@ -1,5 +1,5 @@
 import Link from "next/link";
-// import Image from "next/image";
+import Image from "next/image";
 // import groceryStore from "@/lib/classes/store";
 
 const Header = () => {
@@ -8,7 +8,7 @@ const Header = () => {
 		<header className='bg-green-900'>
 			<nav className='flex justify-between items-center px-4 py-2 text-white'>
 				<Link href='/' className='flex gap-4 items-center '>
-					<img
+					<Image
 						src='/images/logo.png'
 						alt='logo'
 						width={50}
