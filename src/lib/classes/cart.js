@@ -6,7 +6,7 @@ import { db, dbBody } from "@/lib/db";
 export const addToCart = (id, quantity) => {
 	let cart;
 	unstable_batchedUpdates(() => {
-		cart = groceryStore.getState().cart;
+		cart = groceryStore.getState().cartArray;
 	});
 	//cart is array
 

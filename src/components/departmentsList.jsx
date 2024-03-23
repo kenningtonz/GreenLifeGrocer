@@ -1,15 +1,24 @@
 import { getFamilies, getCategories } from "@/lib/classes/category";
 import Link from "next/link";
 async function DepartmentsList() {
-	const categories = await getCategories();
+	const departmentsPHP = await getCategories();
+	const { categories: departments, error } = departmentsPHP;
+	console.log(departmentsPHP);
 	// const families = await getFamilies("Bakery");
-	console.log(categories);
+	if (error.id !== "0") {
+		return (
+			<section className='bg-white p-8'>
+				<h1 className='text-2xl text-center'>Departments Not Found</h1>
+				<p className='text-center'>Sorry, we could not find the departments</p>
+			</section>
+		);
+	}
 
 	return (
 		<section className=' w-full'>
-			<h2 className='text-3xl text-center text-green-900'>Departments</h2>
+			<h2 className='text-3xl text-center text-green-900'>Shop by Department</h2>
 			<ul className='flex gap-4 flex-wrap p-2 mb-12 justify-center'>
-				{categories.map((department) => {
+				{departments.map((department) => {
 					return (
 						<li key={department.name}>
 							<Link

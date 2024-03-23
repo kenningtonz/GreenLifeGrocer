@@ -40,7 +40,7 @@ const Login = () => {
 		//
 	}
 	return (
-		<main className='bg-olive-100 px-4 py-16 flex justify-center'>
+		<main className='bg-olive-100 px-4 py-16 flex justify-center min-h-[90dvh]'>
 			<section className='max-w-md rounded-lg bg-white shadow-sm p-4 '>
 				<h1 className='text-2xl font-bold text-green-900 mb-4'>Login</h1>
 				<form onSubmit={handleSubmit} className='gap-4 flex flex-col'>

@@ -2,7 +2,8 @@ import styles from "./page.module.css";
 import Image from "next/image";
 import { getSessionCookie } from "@/lib/classes/cookies";
 import DepartmentsList from "@/components/departmentsList";
-// import ProductCard from "@/components/productCard";
+import { getRandomProducts } from "@/lib/classes/product";
+import ProductCard from "@/components/products/productCard";
 import { Button } from "@/components/ui/button";
 import {
 	Carousel,
@@ -15,7 +16,10 @@ import Hero from "@/components/hero";
 import { Suspense } from "react";
 import { getSession } from "@/lib/classes/user";
 
-export default function Home() {
+export default async function Home() {
+	const productsPHP = await getRandomProducts(4);
+	const { products, error } = productsPHP;
+	console.log(productsPHP);
 	// const session = getSessionCookie();
 	// console.log(session);
 	return (
@@ -80,31 +84,18 @@ export default function Home() {
 
 			<section className={`mt-12 mb-8 w-full `}>
 				<h2 className='text-3xl text-center text-green-900'>Featured Products</h2>
-				<div className='mt-2 flex gap-4 flex-wrap p-4 justify-evenly bg-half-green'>
-					{/* <ProductCard
-						upc='16000329904'
-						name='Frosting, Butter Cream'
-						cost='2.99'
-						brand='Betty Crocker'
-					/>
-					<ProductCard
-						upc='34000146000'
-						name='Milk Chocolate Chips'
-						cost='3.59'
-						brand="Hershey's"
-					/>
-					<ProductCard
-						upc='43000253403'
-						name='Baking Chocolate Squares, Semi-Sweet'
-						cost='2.59'
-						brand="Baker's"
-					/>
-					<ProductCard
-						upc='16000409897'
-						name='Cake Mix, Chocolate Fudge'
-						cost='3.49'
-						brand='Betty Crocker'
-					/> */}
+				<div className='mt-2 flex gap-4 sm:flex-nowrap flex-wrap p-4 justify-evenly bg-half-green'>
+					{error.id === "0" ? (
+						<>
+							{products.map((product) => {
+								return (
+									<ProductCard key={product.upc} product={product} className='w-64' />
+								);
+							})}
+						</>
+					) : (
+						<p className='text-center'>Sorry, we could not find the products</p>
+					)}
 				</div>
 			</section>
 

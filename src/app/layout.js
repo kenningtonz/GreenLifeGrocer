@@ -1,8 +1,6 @@
 import "./globals.css";
 import "./reset.css";
 import "@/css/join.css";
-import "@/css/join.css";
-import "@/css/link.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 // import { getSession } from "@/lib/classes/user";

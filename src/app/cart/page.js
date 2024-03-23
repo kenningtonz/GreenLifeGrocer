@@ -17,7 +17,7 @@ export default function Cart() {
 		const fetchData = async () => {
 			try {
 				const result = await getProductsByCart();
-				setCart(result);
+				setCart(result.products);
 			} catch (error) {
 				console.error("Error fetching data:", error);
 			}
@@ -35,24 +35,28 @@ export default function Cart() {
 		);
 	}
 
-	const subTotal =
-		Math.round(
-			(cart.reduce((acc, item) => acc + item.price * item.quantity, 0) +
-				Number.EPSILON) *
-				100
-		) / 100;
+	const subtotal = 1;
+	const tax = 1;
+	const total = 1;
 
-	const tax =
-		Math.round(
-			(cart.reduce(
-				(acc, item) => (item.taxable ? acc + item.price * 0.13 : acc),
-				0
-			) +
-				Number.EPSILON) *
-				100
-		) / 100;
+	// const subTotal =
+	// 	Math.round(
+	// 		(cart.reduce((acc, item) => acc + item.price * item.quantity, 0) +
+	// 			Number.EPSILON) *
+	// 			100
+	// 	) / 100;
 
-	const total = Math.round((subTotal + tax + Number.EPSILON) * 100) / 100;
+	// const tax =
+	// 	Math.round(
+	// 		(cart.reduce(
+	// 			(acc, item) => (item.taxable ? acc + item.price * 0.13 : acc),
+	// 			0
+	// 		) +
+	// 			Number.EPSILON) *
+	// 			100
+	// 	) / 100;
+
+	// const total = Math.round((subTotal + tax + Number.EPSILON) * 100) / 100;
 
 	return (
 		<main className='p-8 flex flex-col gap-4'>

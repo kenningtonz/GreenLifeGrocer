@@ -1,14 +1,18 @@
-import "@/css/footer.css";
 import Link from "next/link";
 
 import Image from "next/image";
 const Footer = () => {
+	const accountLinks = ["Sign In", "Create", "Cart", "My Account"];
+
 	return (
 		<>
-			<footer className='footer p-10 bg-green-900 text-green-100'>
-				<nav>
-					<h6 className='footer-title'>Departments</h6>
-					<Link href={"/departments/produce"} className='link link-hover'>
+			<footer className='sm:flex-row flex-col gap-x-10 gap-y-10 text-sm flex w-full place-items-start p-10 bg-green-900 text-green-100'>
+				<nav className=' grid  gap-1'>
+					<h6 className='mb-2 font-bold uppercase opacity-60'>Departments</h6>
+					<Link
+						href={"/grocery/produce"}
+						className='focus:outline-none focus-visible:outline-offset-2 focus-visible:outline-2 focus-visible:outline-current cursor-pointer no-underline [@media(hover:hover)]:hover:underline'
+					>
 						Produce
 					</Link>
 					<a className='link link-hover'>Meat</a>
@@ -20,15 +24,21 @@ const Footer = () => {
 					<a className='link link-hover'>Health & Beauty</a>
 					<a className='link link-hover'>Other</a>
 				</nav>
-				<nav>
-					<h6 className='footer-title'>Account</h6>
-					<a className='link link-hover'>My Account</a>
-					<a className='link link-hover'>Cart</a>
-					<a className='link link-hover'>Sign In</a>
+				<nav className=' grid  gap-1'>
+					<h6 className='mb-2 font-bold uppercase opacity-60'>Account</h6>
+					{accountLinks.map((link) => (
+						<Link
+							href={`/account/${link.toLowerCase()}`}
+							key={link}
+							className='focus:outline-none focus-visible:outline-offset-2 focus-visible:outline-2 focus-visible:outline-current cursor-pointer no-underline [@media(hover:hover)]:hover:underline'
+						>
+							{link}
+						</Link>
+					))}
 				</nav>
 			</footer>
-			<footer className='footer px-10 py-4 border-t bg-green-900 text-green-100 border-green-600'>
-				<aside className='items-center grid-flow-col '>
+			<footer className='sm:grid-flow-row grid-flow-column  gap-x-4 gap-y-10 text-sm grid w-full place-items-start px-10 py-4 border-t bg-green-900 text-green-100 border-green-600'>
+				<aside className='items-center grid-flow-col grid  gap-2 '>
 					<Image
 						src='/images/logo.png'
 						alt='logo'
@@ -47,40 +57,3 @@ const Footer = () => {
 };
 
 export default Footer;
-
-// <footer className="footer">
-//     <span className="flex">
-//         <section className="child50">
-//             <p>GreenLife Grocer</p>
-//             <p>Nourishing You Body, Nurturing the Planet</p>
-//         </section>
-//         <section className="flex child30">
-//             <section>
-//                 <p>Departments</p>
-//                 <ul className="flex wrap">
-//                     <li><a>Produce</a></li>
-//                     <li><a>Meat</a></li>
-//                     <li><a>Dairy & Eggs</a></li>
-//                     <li><a>Bakery</a></li>
-//                     <li><a>Pantry</a></li>
-//                     <li><a>Frozen</a></li>
-//                     <li><a>Household</a></li>
-//                     <li><a>Health & Beauty</a></li>
-//                     <li><a>Other</a></li>
-//                 </ul>
-//             </section>
-
-//             <section>
-//                 <p>Account</p>
-//                 <ul className="flex wrap">
-//                     <li><a>Sign In</a></li>
-//                     <li><a>Cart</a></li>
-//                     <li><a>My Account</a></li>
-
-//                 </ul>
-//             </section>
-//         </section>
-//     </span>
-
-//     <p className="copyright"></p>
-// </footer>

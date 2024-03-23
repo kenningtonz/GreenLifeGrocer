@@ -10,7 +10,18 @@ import { Suspense } from "react";
 import { getCategories, getFamilies } from "@/lib/classes/category";
 
 export default async function GroceryPage({ departmentURL, subDepartmentURL }) {
-	const departments = await getCategories();
+	const departmentsPHP = await getCategories();
+	const { categories: departments, error: departmentE } = departmentsPHP;
+	console.log(departments);
+
+	if (departmentE.id !== "0") {
+		return (
+			<section className='bg-white p-8'>
+				<h1 className='text-2xl text-center'>Departments Not Found</h1>
+				<p className='text-center'>Sorry, we could not find the departments</p>
+			</section>
+		);
+	}
 
 	const activeDepartment = departments.find(
 		(department) => department.url === departmentURL
@@ -30,8 +41,15 @@ export default async function GroceryPage({ departmentURL, subDepartmentURL }) {
 		);
 	}
 
-	const subDepartments =
+	const subDepartmentsPHP =
 		activeDepartment != undefined ? await getFamilies(activeDepartment.id) : null;
+
+	const { categories: subDepartments, error: subDepartmentE } =
+		subDepartmentsPHP != null
+			? subDepartmentsPHP
+			: { categories: null, error: { id: "1" } };
+
+	console.log(subDepartments);
 
 	const activeSubDepartment =
 		subDepartments != null

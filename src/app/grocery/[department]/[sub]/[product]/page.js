@@ -7,6 +7,8 @@ import Rating from "@/components/rating";
 import ProductsCarousel from "@/components/products/productsCarousel";
 import { Suspense } from "react";
 
+import { db } from "@/lib/db";
+
 import Image from "next/image";
 async function Product({ params }) {
 	const url = params.product;
@@ -33,6 +35,7 @@ async function Product({ params }) {
 		brand,
 		avg_price,
 		stars,
+		unit,
 		product_description,
 		category_name,
 		family_name,
@@ -62,7 +65,7 @@ async function Product({ params }) {
 
 			<Image
 				className='child30 object-contain h-auto '
-				src={`/images/product/${upc.slice(0, 4)}/${upc}.jpg`}
+				src={`${db}/images/product/${upc.slice(0, 4)}/${upc}.jpg`}
 				alt={product_name}
 				width={300}
 				height={300}
@@ -73,7 +76,9 @@ async function Product({ params }) {
 
 				<Rating num={stars} />
 
-				<p className='text-right text-2xl'>${avg_price}</p>
+				<p className='text-right text-2xl'>
+					${avg_price} per {unit}
+				</p>
 
 				<QuantityButton
 					className='child50'
