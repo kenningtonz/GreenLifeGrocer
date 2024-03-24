@@ -29,7 +29,7 @@ const InputWithIconButton = React.forwardRef(
 			>
 				<input
 					type={type}
-					className='flex h-10 w-full rounded-md join-item bg-pink  px-3 py-2 text-sm  placeholder:text-pink-800/80 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50'
+					className='text-pink-950 flex h-10 w-full rounded-md join-item bg-pink  px-3 py-2 text-sm  placeholder:text-pink-800/80 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50'
 					ref={ref}
 					{...props}
 				/>

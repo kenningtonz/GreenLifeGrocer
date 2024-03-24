@@ -10,7 +10,7 @@ const buttonVariants = cva(
 		variants: {
 			variant: {
 				default:
-					"shadow-pink-500  bg-pink text-pink-900  hover:bg-pink/80 active:translate-y-[2px] active:shadow-none ",
+					"shadow-pink-500  bg-pink text-pink-900  hover:bg-pink/80  data-[active=true]:bg-pink-700 data-[active=true]:text-white",
 				green:
 					"bg-olive/80 text-green-900 hover:bg-olive/90 data-[active=true]:bg-green data-[active=true]:text-white",
 				outline:
@@ -24,29 +24,39 @@ const buttonVariants = cva(
 			},
 			rounded: {
 				default: "rounded-md",
+				full: "rounded-full",
 				none: "",
+			},
+			press: {
+				default: "",
+				pressed: "active:translate-y-[2px] active:shadow-none",
 			},
 			size: {
 				default: "h-10 px-4 py-2",
 				sm: "h-9 rounded-md px-3",
 				lg: "h-11 rounded-md px-8",
 				icon: "h-10 w-10",
+				smallIcon: "h-4 w-4",
 			},
 		},
 		defaultVariants: {
 			variant: "default",
 			size: "default",
 			rounded: "default",
+			press: "default",
 		},
 	}
 );
 
 const Button = React.forwardRef(
-	({ className, variant, size, rounded, asChild = false, ...props }, ref) => {
+	(
+		{ className, variant, size, rounded, press, asChild = false, ...props },
+		ref
+	) => {
 		const Comp = asChild ? Slot : "button";
 		return (
 			<Comp
-				className={cn(buttonVariants({ variant, size, className, rounded }))}
+				className={cn(buttonVariants({ variant, size, className, rounded, press }))}
 				ref={ref}
 				{...props}
 			/>

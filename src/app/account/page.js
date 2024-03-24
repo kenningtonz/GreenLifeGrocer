@@ -40,7 +40,7 @@ export default function Account() {
 	// }
 
 	return (
-		<main className='bg-olive-100 px-4 py-16 flex justify-center'>
+		<main className='bg-olive-100 px-4 py-16 flex justify-center min-h-[90dvh]'>
 			<section className='max-w-3xl w-full rounded-lg bg-white shadow-sm p-4 '>
 				<h1 className='text-2xl font-bold text-green-900 mb-4'>Account</h1>
 

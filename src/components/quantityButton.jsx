@@ -2,79 +2,50 @@
 import { Plus, Minus } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { addToCart } from "@/lib/classes/cart";
 
 import { AddToCartButton } from "@/components/cartButtons";
 
-export function QuantityButton({ className, id, name, isCart }) {
+export function QuantityButton({ className, id, name }) {
 	const [quantity, setQuantity] = useState(1);
 	// console.log(product);
-	if (!isCart) {
-		return (
-			<span className='flex justify-between'>
-				<div className={`justify-end flex gap-1 px-4 items-center ${className}`}>
-					<Button
-						variant='ghost'
-						disabled={quantity === 1}
-						size='icon'
-						onClick={() => {
-							setQuantity(quantity - 1 < 1 ? 1 : quantity - 1);
-						}}
-					>
-						<Minus className='h-6 w-6' />
-					</Button>
-					<p className='rounded-md text-2xl text-center bg-white h-8 w-8 text-green-900'>
-						{quantity}
-					</p>
-					<Button
-						variant='ghost'
-						size='icon'
-						onClick={() => {
-							setQuantity(quantity + 1);
-						}}
-					>
-						<Plus className='h-6 w-6' />
-					</Button>
-				</div>
-
-				<AddToCartButton
-					className='shadow-md child50'
-					id={id}
-					name={name}
-					quantity={quantity}
-					isIcon={false}
-				/>
-			</span>
-		);
-	}
 
 	return (
-		<div className={`justify-end flex gap-1 px-4 items-center ${className}`}>
-			<Button
-				variant='ghost'
-				disabled={quantity === 1}
-				size='icon'
-				onClick={() => {
-					setQuantity(quantity - 1 < 1 ? 1 : quantity - 1);
-					addToCart(id, quantity - 1 < 1 ? 1 : quantity - 1);
-				}}
+		<span className='flex justify-between  gap-2'>
+			<div
+				className={`sm:justify-end justify-center flex gap-1  px-2 sm:px-4 items-center ${className}`}
 			>
-				<Minus className='h-6 w-6' />
-			</Button>
-			<p className='rounded-md text-2xl text-center bg-white h-8 w-8 text-green-900'>
-				{quantity}
-			</p>
-			<Button
-				variant='ghost'
-				size='icon'
-				onClick={() => {
-					setQuantity(quantity + 1);
-					addToCart(id, quantity + 1);
-				}}
-			>
-				<Plus className='h-6 w-6' />
-			</Button>
-		</div>
+				<Button
+					variant='ghost'
+					disabled={quantity === 1}
+					size='icon'
+					onClick={() => {
+						setQuantity(quantity - 1 < 1 ? 1 : quantity - 1);
+					}}
+				>
+					<Minus className='h-6 w-6' />
+				</Button>
+				<p className='rounded-md text-2xl text-center bg-white h-8 w-8 text-green-900'>
+					{quantity}
+				</p>
+				<Button
+					variant='ghost'
+					size='icon'
+					onClick={() => {
+						setQuantity(quantity + 1);
+					}}
+				>
+					<Plus className='h-6 w-6' />
+				</Button>
+			</div>
+
+			<AddToCartButton
+				className='shadow-md child50'
+				id={id}
+				name={name}
+				quantity={quantity}
+				isIcon={false}
+			/>
+		</span>
 	);
 }
 

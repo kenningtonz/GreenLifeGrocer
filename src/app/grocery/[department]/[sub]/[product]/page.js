@@ -7,6 +7,8 @@ import Rating from "@/components/rating";
 import ProductsCarousel from "@/components/products/productsCarousel";
 import { Suspense } from "react";
 
+import { db } from "@/lib/db";
+
 import Image from "next/image";
 async function Product({ params }) {
 	const url = params.product;
@@ -29,10 +31,12 @@ async function Product({ params }) {
 	}
 	const {
 		upc,
+		id,
 		product_name,
 		brand,
 		avg_price,
 		stars,
+		unit,
 		product_description,
 		category_name,
 		family_name,
@@ -48,7 +52,7 @@ async function Product({ params }) {
 	// console.log(similarProducts);
 
 	return (
-		<main className='bg-white flex gap-4 flex-wrap  p-8 justify-between  mb-8'>
+		<main className='bg-white flex gap-4 flex-wrap sm:px-8 py-8 px-4 justify-between  mb-8'>
 			<Breadcrumbs
 				sameSize={true}
 				paths={[
@@ -62,7 +66,7 @@ async function Product({ params }) {
 
 			<Image
 				className='child30 object-contain h-auto '
-				src={`/images/product/${upc.slice(0, 4)}/${upc}.jpg`}
+				src={`${db}/images/product/${upc.slice(0, 4)}/${upc}.jpg`}
 				alt={product_name}
 				width={300}
 				height={300}
@@ -73,12 +77,15 @@ async function Product({ params }) {
 
 				<Rating num={stars} />
 
-				<p className='text-right text-2xl'>${avg_price}</p>
+				<p className='text-right text-2xl'>
+					${avg_price} per {unit}
+				</p>
 
 				<QuantityButton
 					className='child50'
 					isCart={false}
-					product={product.products[0]}
+					id={id}
+					name={product_name}
 				/>
 			</section>
 			<section className='child100  p-4 rounded-2xl shadow-md bg-olive-200 shadow-olive-600/50'>

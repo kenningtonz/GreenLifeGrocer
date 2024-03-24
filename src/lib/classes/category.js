@@ -26,7 +26,7 @@ export async function getCategories() {
 			dbUSER: "hvgum487_kennedyG",
 			dbPASS: "Kmma68062",
 		}),
-	}).then((res) => res.json().then((data) => data.categories));
+	}).then((res) => res.json());
 }
 
 export async function getFamilies(category) {
@@ -41,5 +41,5 @@ export async function getFamilies(category) {
 			dbUSER: "hvgum487_kennedyG",
 			dbPASS: "Kmma68062",
 		}),
-	}).then((res) => res.json().then((data) => data.families));
+	}).then((res) => res.json());
 }

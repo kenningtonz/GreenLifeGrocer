@@ -21,9 +21,7 @@ const ProductCard = ({ product, className, small, index }) => {
 	return (
 		<Link
 			key={`${upc}_${product_name}-${index}`}
-			className={` flex flex-col justify-between p-3 ${className} ${
-				small ? "min-w-36 max-w-48" : "min-w-48 max-w-64"
-			} hover:scale-105   bg-white  transition-all  rounded-2xl shadow-md shadow-olive-400/50 hover:shadow-olive-400`}
+			className={`${className}  flex flex-col justify-between p-3 hover:scale-105   bg-white  transition-all  rounded-2xl shadow-md shadow-olive-400/50 hover:shadow-olive-400`}
 			href={`/grocery/${category_url}/${family_url}/${url}`}
 		>
 			<Image
@@ -46,27 +44,27 @@ const ProductCard = ({ product, className, small, index }) => {
 				{brand}
 			</h4>
 
-			{small ? (
-				<span className='flex justify-between'>
-					<p className='text-olive-700  mt-2 text-base'>${avg_price}</p>
-					<AddToCartButton id={id} name={product_name} quantity={1} isIcon={true} />
-				</span>
-			) : (
-				<>
-					<p className='text-olive-700  mt-2 text-base'>
-						${avg_price} per {unit}
-					</p>
-					<AddToCartButton
-						className='shadow w-full self-end mt-2'
-						id={id}
-						name={product_name}
-						quantity={1}
-						isIcon={false}
-					/>
-				</>
-			)}
+			<span className='flex justify-between'>
+				<p className='text-olive-700  mt-2 text-base'>
+					${avg_price} {unit}
+				</p>
+				<AddToCartButton id={id} name={product_name} quantity={1} isIcon={true} />
+			</span>
 		</Link>
 	);
 };
 
 export default ProductCard;
+
+{
+	/* <p className='text-olive-700  mt-2 text-base'>
+${avg_price} {unit}
+</p>
+<AddToCartButton
+className='shadow w-full self-end mt-2'
+id={id}
+name={product_name}
+quantity={1}
+isIcon={false}
+/> */
+}

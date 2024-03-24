@@ -2,7 +2,7 @@
 import * as React from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-
+import Autoplay from "embla-carousel-autoplay";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -25,6 +25,7 @@ const Carousel = React.forwardRef(
 			opts,
 			setApi,
 			plugins,
+			autoPlay = false,
 			className,
 			children,
 			...props
@@ -36,10 +37,18 @@ const Carousel = React.forwardRef(
 				...opts,
 				axis: orientation === "horizontal" ? "x" : "y",
 			},
-			plugins
+			autoPlay
+				? [
+						Autoplay({
+							delay: 12000,
+						}),
+				  ]
+				: []
 		);
+
 		const [canScrollPrev, setCanScrollPrev] = React.useState(false);
 		const [canScrollNext, setCanScrollNext] = React.useState(false);
+		const [selectedIndex, setSelectedIndex] = React.useState(0);
 
 		const onSelect = React.useCallback((api) => {
 			if (!api) {
@@ -48,6 +57,7 @@ const Carousel = React.forwardRef(
 
 			setCanScrollPrev(api.canScrollPrev());
 			setCanScrollNext(api.canScrollNext());
+			setSelectedIndex(api.selectedScrollSnap());
 		}, []);
 
 		const scrollPrev = React.useCallback(() => {
@@ -58,18 +68,9 @@ const Carousel = React.forwardRef(
 			api?.scrollNext();
 		}, [api]);
 
-		const handleKeyDown = React.useCallback(
-			(event) => {
-				if (event.key === "ArrowLeft") {
-					event.preventDefault();
-					scrollPrev();
-				} else if (event.key === "ArrowRight") {
-					event.preventDefault();
-					scrollNext();
-				}
-			},
-			[scrollPrev, scrollNext]
-		);
+		const scrollTo = React.useCallback((index) => {
+			api?.scrollTo(index);
+		}, [scrollPrev, scrollNext][api]);
 
 		React.useEffect(() => {
 			if (!api || !setApi) {
@@ -105,11 +106,12 @@ const Carousel = React.forwardRef(
 					scrollNext,
 					canScrollPrev,
 					canScrollNext,
+					selectedIndex,
+					scrollTo,
 				}}
 			>
 				<div
 					ref={ref}
-					onKeyDownCapture={handleKeyDown}
 					className={cn("relative", className)}
 					role='region'
 					aria-roledescription='carousel'
@@ -151,7 +153,7 @@ const CarouselItem = React.forwardRef(({ className, ...props }, ref) => {
 			role='group'
 			aria-roledescription='slide'
 			className={cn(
-				"min-w-0 shrink-0 grow-0 basis-full",
+				"mx-auto min-w-0 shrink-0 grow-0 basis-full",
 				orientation === "horizontal" ? "pl-4" : "pt-4",
 				className
 			)}
@@ -160,6 +162,34 @@ const CarouselItem = React.forwardRef(({ className, ...props }, ref) => {
 	);
 });
 CarouselItem.displayName = "CarouselItem";
+
+const CarouselDots = React.forwardRef(
+	({ className, variant, ...props }, ref) => {
+		const { selectedIndex, scrollTo, api } = useCarousel();
+		console.log(selectedIndex);
+		return (
+			<div
+				className={cn(
+					" absolute z-50 mt-4 flex w-[calc(100vw-16px)] items-center justify-center gap-4",
+					className
+				)}
+				{...props}
+			>
+				{api?.scrollSnapList().map((_, index) => (
+					<Button
+						key={index}
+						variant={variant}
+						size='smallIcon'
+						rounded='full'
+						data-active={index === selectedIndex}
+						onClick={() => scrollTo(index)}
+					/>
+				))}
+			</div>
+		);
+	}
+);
+CarouselDots.displayName = "CarouselDots";
 
 const CarouselPrevious = React.forwardRef(
 	({ className, variant = "outline", size = "icon", ...props }, ref) => {
@@ -171,9 +201,9 @@ const CarouselPrevious = React.forwardRef(
 				variant={variant}
 				size={size}
 				className={cn(
-					"absolute  h-8 w-8 rounded-full",
+					"absolute h-8 w-8 rounded-full",
 					orientation === "horizontal"
-						? "left-2 top-1/2 -translate-y-1/2"
+						? "-left-12 top-1/2 -translate-y-1/2"
 						: "-top-12 left-1/2 -translate-x-1/2 rotate-90",
 					className
 				)}
@@ -201,7 +231,7 @@ const CarouselNext = React.forwardRef(
 				className={cn(
 					"absolute h-8 w-8 rounded-full",
 					orientation === "horizontal"
-						? "right-4 top-1/2 -translate-y-1/2"
+						? "-right-12 top-1/2 -translate-y-1/2"
 						: "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
 					className
 				)}
@@ -222,5 +252,6 @@ export {
 	CarouselContent,
 	CarouselItem,
 	CarouselPrevious,
+	CarouselDots,
 	CarouselNext,
 };
