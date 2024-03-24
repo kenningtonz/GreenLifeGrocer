@@ -44,12 +44,12 @@ export default async function GroceryPage({ departmentURL, subDepartmentURL }) {
 	const subDepartmentsPHP =
 		activeDepartment != undefined ? await getFamilies(activeDepartment.id) : null;
 
-	const { categories: subDepartments, error: subDepartmentE } =
+	const { families: subDepartments, error: subDepartmentE } =
 		subDepartmentsPHP != null
 			? subDepartmentsPHP
 			: { categories: null, error: { id: "1" } };
 
-	console.log(subDepartments);
+	console.log(subDepartmentsPHP);
 
 	const activeSubDepartment =
 		subDepartments != null
@@ -95,7 +95,6 @@ export default async function GroceryPage({ departmentURL, subDepartmentURL }) {
 				/>
 
 				<section className='p-6 flex flex-col gap-4 items-end'>
-					<Search />
 					<SortSelect />
 				</section>
 			</section>

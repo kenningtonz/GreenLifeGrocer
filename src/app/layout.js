@@ -7,6 +7,7 @@ import Footer from "@/components/footer";
 import { Toaster } from "@/components/ui/toaster";
 import { Suspense } from "react";
 import { getCookie, setCookie } from "@/lib/classes/cookies";
+import { CartProvider } from "@/lib/context/cart";
 
 export const metadata = {
 	title: "GreenLife Grocer",
@@ -20,8 +21,11 @@ export default function RootLayout({ children }) {
 	return (
 		<html lang='en'>
 			<body className='body'>
-				<Header />
-				<Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+				<CartProvider cart={[]}>
+					<Header />
+					<Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+				</CartProvider>
+
 				<Footer />
 
 				<Toaster />

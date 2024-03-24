@@ -31,6 +31,7 @@ async function Product({ params }) {
 	}
 	const {
 		upc,
+		id,
 		product_name,
 		brand,
 		avg_price,
@@ -51,7 +52,7 @@ async function Product({ params }) {
 	// console.log(similarProducts);
 
 	return (
-		<main className='bg-white flex gap-4 flex-wrap  p-8 justify-between  mb-8'>
+		<main className='bg-white flex gap-4 flex-wrap sm:px-8 py-8 px-4 justify-between  mb-8'>
 			<Breadcrumbs
 				sameSize={true}
 				paths={[
@@ -83,7 +84,8 @@ async function Product({ params }) {
 				<QuantityButton
 					className='child50'
 					isCart={false}
-					product={product.products[0]}
+					id={id}
+					name={product_name}
 				/>
 			</section>
 			<section className='child100  p-4 rounded-2xl shadow-md bg-olive-200 shadow-olive-600/50'>

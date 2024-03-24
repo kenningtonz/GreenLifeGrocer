@@ -3,21 +3,10 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { InputWithIconButton } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useCallback } from "react";
+import { getSearchHints } from "@/lib/classes/search";
 
-const SearchProduct = () => {
+const SearchBar = () => {
 	const router = useRouter();
-	const pathname = usePathname();
-	const searchParams = useSearchParams();
-
-	const createQueryString = useCallback(
-		(name, value) => {
-			const params = new URLSearchParams(searchParams);
-			params.set(name, value);
-			return params.toString();
-		},
-		[searchParams]
-	);
-
 	function handleSearch(e) {
 		e.preventDefault();
 		const form = e.target;
@@ -40,4 +29,4 @@ const SearchProduct = () => {
 	);
 };
 
-export default SearchProduct;
+export default SearchBar;

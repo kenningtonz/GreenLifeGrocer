@@ -15,14 +15,6 @@ const Footer = () => {
 					>
 						Produce
 					</Link>
-					<a className='link link-hover'>Meat</a>
-					<a className='link link-hover'>Pantry</a>
-					<a className='link link-hover'>Dairy & Eggs</a>
-					<a className='link link-hover'>Bakery</a>
-					<a className='link link-hover'>Frozen</a>
-					<a className='link link-hover'>Household</a>
-					<a className='link link-hover'>Health & Beauty</a>
-					<a className='link link-hover'>Other</a>
 				</nav>
 				<nav className=' grid  gap-1'>
 					<h6 className='mb-2 font-bold uppercase opacity-60'>Account</h6>
@@ -50,6 +42,12 @@ const Footer = () => {
 						GreenLife Grocer &copy; 2024 <br />
 						Nourishing You Body, Nurturing the Planet
 					</p>
+					<a
+						href='https://www.flaticon.com/packs/supermarket-109'
+						title='department icons'
+					>
+						Department icons created by iconixar - Flaticon
+					</a>
 				</aside>
 			</footer>
 		</>

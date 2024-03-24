@@ -9,7 +9,9 @@ const groceryStore = create((set) => ({
 	setEmail: (email) => set({ email: email }),
 	user: {},
 	setUser: (user) => set({ user: user }),
-	cartArray: [],
+	cartArray: {},
+
+	setCart: (cart) => set({ cart: cart }),
 }));
 
 // process.env.user;
