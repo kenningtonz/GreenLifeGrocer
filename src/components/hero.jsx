@@ -1,14 +1,11 @@
-const Hero = ({ image, content }) => {
+const Hero = ({ image, children, className }) => {
 	// console.log(image);
 	return (
 		<section
-			className='rounded-lg grid w-full  place-items-center bg-cover bg-center min-h-[300px]'
-			style={{ backgroundImage: `url(${image})` }}
+			style={{ "--image-url": `url(/images/home/${image})` }}
+			className={` p-8  shadow-md flex flex-col w-full rounded-lg ${className} bg-cover bg-center min-h-[400px] bg-[image:var(--image-url)]`}
 		>
-			<div className='col-start-1 row-start-1 h-full w-full bg-white  bg-opacity-60'></div>
-			<div className='col-start-1 row-start-1 z-0 flex items-center justify-center l gap-4 p-4 text-center text-neutral-content'>
-				<div className='max-w-md'>{content}</div>
-			</div>
+			{children}
 		</section>
 	);
 };

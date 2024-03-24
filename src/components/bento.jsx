@@ -1,6 +1,8 @@
-const BentoLayout = () => {
+const BentoLayout = ({ className }) => {
 	return (
-		<section className='grid gap-8 grid-cols-[4fr_3fr_3fr] grid-rows-3 max-w-3xl'>
+		<section
+			className={`grid gap-8 grid-cols-[4fr_3fr_3fr] grid-rows-3 max-w-3xl ${className}`}
+		>
 			<BentoCard
 				image='fruit.webp'
 				className='justify-end gap-2 shadow-pink-500 text-pink-950 '
@@ -25,11 +27,13 @@ const BentoLayout = () => {
 				</p>
 			</BentoCard>
 			<BentoCard
-				image='cheerios.webp'
-				className='aspect-square shadow-amber-600'
+				image='banana.webp'
+				className='aspect-square shadow-amber-600 text-amber-950 text-center'
 				col={1}
 				row={1}
-			></BentoCard>
+			>
+				<h3 className='text-2xl  font-bold'>Fruit</h3>
+			</BentoCard>
 			<BentoCard
 				image='eggplant.webp'
 				className='aspect-square shadow-purple-600 text-purple-950 text-center justify-end'
@@ -65,7 +69,8 @@ const BentoLayout = () => {
 const BentoCard = ({ image, className, col, row, children }) => {
 	return (
 		<div
-			className={` shadow-[4px_4px_0_0] p-8 flex flex-col rounded-lg bg-contain min-h-30 col-span-${col} row-span-${row} ${className} bg-[url(/images/home/${image})]`}
+			style={{ "--image-url": `url(/images/home/${image})` }}
+			className={` shadow-[4px_4px_0_0] p-8 flex flex-col rounded-lg bg-cover min-h-30 col-span-${col} row-span-${row} ${className} bg-[image:var(--image-url)]`}
 		>
 			{children}
 		</div>

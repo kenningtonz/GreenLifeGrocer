@@ -1,4 +1,3 @@
-import styles from "./page.module.css";
 import Image from "next/image";
 import { getSessionCookie } from "@/lib/classes/cookies";
 import DepartmentsList from "@/components/departmentsList";

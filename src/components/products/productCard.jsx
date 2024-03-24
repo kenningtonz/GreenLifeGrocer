@@ -21,7 +21,7 @@ const ProductCard = ({ product, className, small, index }) => {
 	return (
 		<Link
 			key={`${upc}_${product_name}-${index}`}
-			className={`${className} h-full flex flex-col justify-between p-3 hover:scale-105   bg-white  transition-all  rounded-2xl shadow-md shadow-olive-400/50 hover:shadow-olive-400`}
+			className={`${className}  flex flex-col justify-between p-3 hover:scale-105   bg-white  transition-all  rounded-2xl shadow-md shadow-olive-400/50 hover:shadow-olive-400`}
 			href={`/grocery/${category_url}/${family_url}/${url}`}
 		>
 			<Image
