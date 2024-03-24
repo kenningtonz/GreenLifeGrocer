@@ -8,17 +8,13 @@ import { Toaster } from "@/components/ui/toaster";
 import { Suspense } from "react";
 import { getCookie, setCookie } from "@/lib/classes/cookies";
 import { CartProvider } from "@/lib/context/cart";
-import { setNextCookie, getNextCookie } from "@/lib/classes/cookieNext";
 
 export const metadata = {
 	title: "GreenLife Grocer",
 	description: "Grocery Store",
 };
 
-export default async function RootLayout({ children }) {
-	await setNextCookie("name", "kennedy");
-	const cookie = await getNextCookie("name");
-	console.log(cookie);
+export default function RootLayout({ children }) {
 	// await setCookie("name", "kennedy", 60 * 60 * 24 * 7);
 	// const cookie = await getCookie("name");
 	// console.log(cookie);
