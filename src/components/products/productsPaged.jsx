@@ -66,7 +66,7 @@ const ProductsPaged = ({ products }) => {
 
 	// const numOfPages = Math.ceil(products.length / productsPerPage);
 	return (
-		<section className='p-4 px-8 bg-green-gradient'>
+		<section className='p-4 px-8 '>
 			{currentPage > pagedProducts.length ? (
 				<p>no products</p>
 			) : (
@@ -78,7 +78,7 @@ const ProductsPaged = ({ products }) => {
 									key={`${index}-${product.product_name}`}
 									className='min-w-48 max-w-64 flex-1'
 								>
-									<ProductCard product={product} index={index} className={""} />
+									<ProductCard product={product} index={index} className={"h-full"} />
 								</div>
 							);
 						})}

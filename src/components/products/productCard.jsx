@@ -25,9 +25,7 @@ const ProductCard = ({ product, className, small, index }) => {
 			href={`/grocery/${category_url}/${family_url}/${url}`}
 		>
 			<Image
-				className={`rounded-md w-auto bg-white object-contain ${
-					small ? "h-20" : "h-32"
-				} h-auto`}
+				className={`rounded-md w-auto bg-white object-contain h-28 mb-2`}
 				src={`${db}/images/product/${upc.slice(0, 4)}/${upc}.jpg`}
 				alt={product_name}
 				width={175}

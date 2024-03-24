@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Star } from "lucide-react";
 
 const Rating = ({ num, size = 32 }) => {
 	const stars = new Array(parseInt(num)).fill(0);
@@ -6,13 +7,14 @@ const Rating = ({ num, size = 32 }) => {
 		<div className='flex gap-1'>
 			{stars.map((_, index) => {
 				return (
-					<Image
+					<Star
 						key={`${index}-star`}
-						src='/images/star.svg'
-						alt='star'
+						fill='#f1acac'
+						strokeLinejoin='round'
+						strokeLinecap='round'
+						stroke='#f1acac'
 						className='w-auto'
-						width={size}
-						height={size}
+						size={size}
 					/>
 				);
 			})}

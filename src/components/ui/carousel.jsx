@@ -166,7 +166,7 @@ CarouselItem.displayName = "CarouselItem";
 const CarouselDots = React.forwardRef(
 	({ className, variant, ...props }, ref) => {
 		const { selectedIndex, scrollTo, api } = useCarousel();
-		console.log(selectedIndex);
+		// console.log(selectedIndex);
 		return (
 			<div
 				className={cn(

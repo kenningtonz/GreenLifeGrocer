@@ -11,6 +11,7 @@ const buttonVariants = cva(
 			variant: {
 				default:
 					"shadow-pink-500  bg-pink text-pink-900  hover:bg-pink/80  data-[active=true]:bg-pink-700 data-[active=true]:text-white",
+
 				green:
 					"bg-olive/80 text-green-900 hover:bg-olive/90 data-[active=true]:bg-green data-[active=true]:text-white",
 				outline:

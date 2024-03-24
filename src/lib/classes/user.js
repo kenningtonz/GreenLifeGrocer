@@ -52,6 +52,15 @@ export async function resetPassword(id, code, password) {
 	).then((res) => res.json());
 }
 
+export async function getUser(user_id) {
+	return fetch(
+		`${db}/get_user.php`,
+		dbBody({
+			user_id: user_id,
+		})
+	).then((res) => res.json());
+}
+
 export async function sendResetPasswordEmail(email) {
 	return fetch(
 		`${db}/send_reset_password_email.php`,
@@ -62,6 +71,8 @@ export async function sendResetPasswordEmail(email) {
 }
 
 //returns user if valid and extends session
-export async function getSession() {
-	return fetch(`${db}/get_session.php`, dbBody({})).then((res) => res.json());
+export async function getSession(session_id) {
+	return fetch(`${db}/get_session.php`, dbBody({ session_id: session_id })).then(
+		(res) => res.json()
+	);
 }

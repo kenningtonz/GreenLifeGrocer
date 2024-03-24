@@ -6,28 +6,32 @@ import Footer from "@/components/footer";
 // import { getSession } from "@/lib/classes/user";
 import { Toaster } from "@/components/ui/toaster";
 import { Suspense } from "react";
-import { getCookie, setCookie } from "@/lib/classes/cookies";
 import { CartProvider } from "@/lib/context/cart";
-
+import { UserProvider } from "@/lib/context/user";
+import { getSession } from "@/lib/classes/session";
+import { getUser } from "@/lib/classes/user";
+import { cookies } from "next/headers";
+import { auth } from "@/lib/classes/local";
 export const metadata = {
 	title: "GreenLife Grocer",
 	description: "Grocery Store",
 };
 
 export default async function RootLayout({ children }) {
-	// await setCookie("name", "kennedy", 60 * 60 * 24 * 7);
-	// const cookie = await getCookie("name");
-	// console.log(cookie);
+	// const session = await getSession();
+	// console.log(session);
+	// const cookie = cookies().get("session")?.value;
+
 	return (
 		<html lang='en'>
 			<body className='body'>
 				<CartProvider cart={[]}>
-					<Header />
-					<Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+					<UserProvider user={{}}>
+						<Header />
+						<Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+					</UserProvider>
 				</CartProvider>
-
 				<Footer />
-
 				<Toaster />
 			</body>
 		</html>

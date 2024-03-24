@@ -19,9 +19,8 @@ import Link from "next/link";
 export default async function Home() {
 	const productsPHP = await getRandomProducts(4);
 	const { products, error } = productsPHP;
-	console.log(productsPHP);
-	// const session = getSessionCookie();
-	// console.log(session);
+	// console.log(productsPHP);
+
 	return (
 		<main className='py-8 flex flex-col justify-between items-center'>
 			<section className='w-full flex justify-center'>

@@ -31,9 +31,10 @@ PaginationItem.displayName = "PaginationItem";
 const PaginationLink = ({ className, isActive, size = "icon", ...props }) => (
 	<Link
 		aria-current={isActive ? "page" : undefined}
+		data-active={isActive}
 		className={cn(
 			buttonVariants({
-				variant: isActive ? "greenDark" : "ghost",
+				variant: isActive ? "default" : "ghost",
 				size,
 				rounded: "default",
 			}),
