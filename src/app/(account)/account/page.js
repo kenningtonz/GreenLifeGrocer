@@ -57,7 +57,7 @@ export default function Account() {
 			router.push("/login");
 		}
 		setIsMounted(true);
-	}, [user]);
+	}, []);
 
 	if (!isMounted) {
 		return <Loader />;

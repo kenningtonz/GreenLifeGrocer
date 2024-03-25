@@ -1,7 +1,5 @@
 import Image from "next/image";
-import { getSessionCookie } from "@/lib/classes/cookies";
-import DepartmentsList from "@/components/departmentsList";
-import { getRandomProducts } from "@/lib/classes/product";
+
 import ProductCard from "@/components/products/productCard";
 import { getSearch } from "@/lib/classes/search";
 import { Suspense } from "react";

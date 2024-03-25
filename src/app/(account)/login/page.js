@@ -24,7 +24,7 @@ const Login = () => {
 			router.push("/account");
 		}
 		setIsMounted(true);
-	}, [user]);
+	}, []);
 	const [error, setError] = useState("");
 	const [user, setUser] = useUserContext();
 	const [cart, setCart] = useCartContext();

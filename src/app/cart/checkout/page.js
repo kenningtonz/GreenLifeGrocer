@@ -36,7 +36,7 @@ export default function Checkout() {
 		}
 		fetchData();
 		setIsMounted(true);
-	}, [user]);
+	}, []);
 
 	const subTotal =
 		Math.round(
