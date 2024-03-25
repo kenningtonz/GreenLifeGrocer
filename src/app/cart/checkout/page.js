@@ -36,7 +36,7 @@ export default function Checkout() {
 		}
 		fetchData();
 		setIsMounted(true);
-	}, []);
+	}, [user]);
 
 	const subTotal =
 		Math.round(
@@ -481,17 +481,3 @@ const ShippingForm = ({ user, setUser, nextStep }) => {
 		</form>
 	);
 };
-
-function CheckoutCart() {
-	const [cart, setCart] = useCartContext();
-	return (
-		<div>
-			<h1>Cart</h1>
-			<ul>
-				{cart.map((item) => (
-					<li>{item.name}</li>
-				))}
-			</ul>
-		</div>
-	);
-}

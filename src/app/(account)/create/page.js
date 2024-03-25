@@ -24,7 +24,7 @@ const CreateAccount = () => {
 			router.push("/account");
 		}
 		setIsMounted(true);
-	}, []);
+	}, [user]);
 
 	const setCookie = async (session) => {
 		Cookies.set("session", session, {
