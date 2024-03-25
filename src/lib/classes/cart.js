@@ -18,3 +18,13 @@ export async function setUserCart(cart, user_id) {
 		})
 	).then((res) => res.json());
 }
+
+export async function completePurchase(cart, user_id) {
+	return fetch(
+		`${db}/complete_purchase.php`,
+		dbBody({
+			cart: cart,
+			user_id: user_id,
+		})
+	).then((res) => res.json());
+}
