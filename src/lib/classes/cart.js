@@ -1,6 +1,3 @@
-import { unstable_batchedUpdates } from "react-dom";
-import groceryStore from "./store";
-
 import { db, dbBody } from "@/lib/db";
 
 export async function getProductsByCart(cartArray) {
@@ -12,10 +9,12 @@ export async function getProductsByCart(cartArray) {
 	).then((res) => res.json());
 }
 
-// export async function getCart() {
-// 	return await getCookie("cart");
-// }
-
-// export async function setCart(cart) {
-// 	return await setCookie("cart", cart, 60 * 60 * 24);
-// }
+export async function setUserCart(cart, user_id) {
+	return fetch(
+		`${db}/set_cart.php`,
+		dbBody({
+			cart: cart,
+			user_id: user_id,
+		})
+	).then((res) => res.json());
+}

@@ -63,6 +63,10 @@ p {
 	flex: 1 1 30%;
 }
 
+.child70 {
+	flex: 1 1 65%;
+}
+
 .child25 {
 	flex: 1 1 23%;
 }
@@ -95,4 +99,8 @@ p {
 		rgba(215, 220, 154, 0.44) 27%,
 		#ccd385 100%
 	);
+}
+
+.mainGreenCenter {
+	@apply bg-olive-100 flex justify-center items-center min-h-[90dvh];
 }

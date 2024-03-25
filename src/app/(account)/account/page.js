@@ -6,50 +6,77 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUserContext } from "@/lib/context/user";
 import { useState, useEffect } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { getLocal } from "@/lib/classes/local";
-import Cookies from "js-cookie";
-import { getSession } from "@/lib/classes/session";
-import { auth } from "@/lib/classes/local";
+import { logoutAccount } from "@/lib/classes/session";
+import Loader from "@/components/loader";
+// import {se}
 
 export default function Account() {
 	const [user, setUser] = useUserContext();
 	const [editing, setEditing] = useState(false);
+	const [isMounted, setIsMounted] = useState(false);
 	console.log(user);
 	const router = useRouter();
-	// const getCookie = async () => {
-	// 	return Cookies.get("session");
-	// };
-	// getCookie().then((cookie) => {
-	// 	console.log(cookie);
-	// });
 
 	function savePersonal(e) {
 		e.preventDefault();
-		console.log("save personal info");
+		const form = e.target;
+		const name_first = form.name_first.value;
+		const name_last = form.name_last.value;
+		const phone = form.phone.value;
+		const shipping_address = form.shipping_address.value;
+		const shipping_city = form.shipping_city.value;
+		const shipping_province = form.shipping_province.value;
+		const shipping_postal = form.shipping_postal.value;
+		console.log(
+			name_first,
+			name_last,
+			phone,
+			shipping_address,
+			shipping_city,
+			shipping_province,
+			shipping_postal
+		);
+		// save to user object
+		setUser({
+			...user,
+			billing_name_first: name_first,
+			billing_name_last: name_last,
+			billing_phone: phone,
+			shipping_address: shipping_address,
+			shipping_city: shipping_city,
+			shipping_province: shipping_province,
+			shipping_postal: shipping_postal,
+		});
+
 		setEditing(false);
 	}
 
 	useEffect(() => {
-		const getUserData = async () => {
-			const authData = await auth();
-			console.log(authData);
-			return authData;
-		};
-		getUserData().then((data) => {
-			console.log(data);
-		});
 		if (Object.keys(user).length === 0) {
 			console.log("user is null");
 			router.push("/login");
 		}
+		setIsMounted(true);
 	}, []);
 
+	if (!isMounted) {
+		return <Loader />;
+	}
 	return (
 		<main className='bg-olive-100 px-4 py-16 flex justify-center min-h-[90dvh]'>
 			<section className='max-w-3xl w-full rounded-lg bg-white shadow-sm p-4 '>
 				<h1 className='text-3xl text-center font-bold text-green-900 mb-4'>
 					Account
 				</h1>
+				<Button
+					variant='green'
+					onClick={() => {
+						logoutAccount();
+						setIsMounted(false);
+					}}
+				>
+					Logout
+				</Button>
 
 				<Tabs defaultValue='overview' className=' flex gap-4 mt-2'>
 					<TabsList className='flex-col' horizontal={true}>
@@ -62,7 +89,6 @@ export default function Account() {
 					</TabsContent>
 					<TabsContent value='details'>
 						{/* <p className='text-green-900 text-2xl'>Personal Info</p> */}
-
 						<form onSubmit={savePersonal} className='flex flex-col gap-4 '>
 							{!editing ? (
 								<Button variant='green' onClick={() => setEditing(true)}>
@@ -114,81 +140,84 @@ export default function Account() {
 										disabled={!editing}
 									/>
 								</div>
+								<div className='child50'>
+									<label htmlFor='phone' className='text-green-900 text-sm ml-3'>
+										Phone
+									</label>
+									<Input
+										type='tel'
+										id='phone'
+										placeholder='Phone'
+										defaultValue={user.billing_phone}
+										className='mb-2'
+										disabled={!editing}
+									/>
+								</div>
 							</fieldset>
 							<fieldset className='flex flex-wrap gap-4'>
-								<legend className='mb-2'>Billing Address</legend>
+								<legend className='mb-2'>Shipping Address</legend>
 								<div className='child100'>
 									<label
-										htmlFor='billing_address'
+										htmlFor='shipping_address'
 										className='text-green-900 text-sm ml-3'
 									>
 										Address
 									</label>
 									<Input
 										type='text'
-										id='billing_address'
+										id='shipping_address'
 										placeholder='Address'
-										defaultValue={user.billing_address}
+										defaultValue={user.shipping_address}
 										className='mb-2'
 										disabled={!editing}
 									/>
 								</div>
 								<div className='child50'>
-									<label htmlFor='billing_city' className='text-green-900 text-sm ml-3'>
+									<label htmlFor='shipping_city' className='text-green-900 text-sm ml-3'>
 										City
 									</label>
 									<Input
 										type='text'
-										id='billing_city'
+										id='shipping_city'
 										placeholder='City'
-										defaultValue={user.billing_city}
+										defaultValue={user.shipping_city}
 										className='mb-2'
 										disabled={!editing}
 									/>
 								</div>
 								<div className='child50'>
 									<label
-										htmlFor='billing_province'
+										htmlFor='shipping_province'
 										className='text-green-900 text-sm ml-3'
 									>
 										Province
 									</label>
 									<Input
 										type='text'
-										id='billing_province'
+										id='shipping_province'
 										placeholder='Province'
-										defaultValue={user.billing_province}
+										defaultValue={user.shipping_province}
 										className='mb-2'
 										disabled={!editing}
 									/>
 								</div>
 								<div className='child50'>
 									<label
-										htmlFor='billing_postal'
+										htmlFor='shipping_postal'
 										className='text-green-900 text-sm ml-3'
 									>
 										Postal Code
 									</label>
 									<Input
 										type='text'
-										id='billing_postal'
+										id='shipping_postal'
 										placeholder='Postal Code'
 										disabled={!editing}
-										defaultValue={user.billing_postal}
+										defaultValue={user.shipping_postal}
 										className='mb-2'
 									/>
 								</div>
 							</fieldset>
-							<div className='flex items-center'>
-								<Checkbox
-									id='shippingSame'
-									label='Shipping same as billing'
-									disabled={!editing}
-								/>
-								<label htmlFor='shippingSame' className='text-green-900 text-sm ml-3'>
-									Shipping Address same as Billing
-								</label>
-							</div>
 						</form>
 					</TabsContent>
 					<TabsContent value='history'>

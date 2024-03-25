@@ -1,16 +1,40 @@
 "use client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { createAccount } from "@/lib/classes/user";
+import { createAccount, loginAccount } from "@/lib/classes/user";
 import Link from "next/link";
-import { useState } from "react";
-import groceryStore from "@/lib/classes/store";
+import { useState, useEffect } from "react";
+import { useUserContext } from "@/lib/context/user";
+import Cookies from "js-cookie";
+import { useRouter, useSearchParams } from "next/navigation";
+import Loader from "@/components/loader";
 
 const CreateAccount = () => {
-	const emailStored = groceryStore((state) => state.email);
-	const saveEmail = groceryStore((state) => state.setEmail);
-	// let error = "";
+	const [user, setUser] = useUserContext();
 	const [error, setError] = useState("");
+	const [isMounted, setIsMounted] = useState(false);
+
+	const router = useRouter();
+	const searchParams = useSearchParams();
+	const fromPage = searchParams.get("from");
+
+	useEffect(() => {
+		if (Object.keys(user).length > 0) {
+			console.log("user is logged in");
+			router.push("/account");
+		}
+		setIsMounted(true);
+	}, []);
+
+	const setCookie = async (session) => {
+		Cookies.set("session", session, {
+			expires: 60 * 60 * 24 * 7,
+			path: "/",
+			httpOnly: true,
+		});
+		// router.refresh();
+	};
+
 	async function handleSubmit(e) {
 		e.preventDefault();
 		const form = e.target;
@@ -19,16 +43,26 @@ const CreateAccount = () => {
 		const name_first = form.name_first.value;
 		const name_last = form.name_last.value;
 		console.log(email, password, name_first, name_last);
-		saveEmail(email);
 		const create = await createAccount(email, password, name_first, name_last);
+
 		console.log(create);
 		if (create.error.id === "0") {
 			// go to another page
-			alert("working");
+			const login = await loginAccount(email, password);
+			console.log(login);
+			if (login.error.id === "0") {
+				setUser(login.user);
+				setCookie(login.user.session);
+				router.push(fromPage == "cart" ? "/cart/checkout" : "/account");
+			}
 		} else {
 			setError(create.error.error_message);
 			console.log(error);
 		}
+	}
+
+	if (!isMounted) {
+		return <Loader />;
 	}
 
 	return (

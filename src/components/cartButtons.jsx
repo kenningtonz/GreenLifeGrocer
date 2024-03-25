@@ -2,9 +2,13 @@
 import { Button, ButtonIcon } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useCartContext } from "@/lib/context/cart";
+import { useUserContext } from "@/lib/context/user";
 import { Plus, Minus } from "lucide-react";
+import { setCookie } from "@/lib/classes/cookieNext";
+import { setUserCart } from "@/lib/classes/cart";
 
 export const AddToCartButton = ({ id, name, quantity, isIcon, className }) => {
+	const [user, setUser] = useUserContext();
 	const [cart, setCart] = useCartContext();
 	const { toast } = useToast();
 	const addToCart = () => {
@@ -13,8 +17,13 @@ export const AddToCartButton = ({ id, name, quantity, isIcon, className }) => {
 		} else {
 			cart[id] = quantity;
 		}
-		console.log(cart);
 		setCart({ ...cart });
+		if (Object.keys(user).length > 0) {
+			setUserCart(JSON.stringify(cart), user.user_id).then((res) => {
+				console.log(res);
+			});
+		}
+		setCookie("cart", JSON.stringify(cart));
 	};
 
 	return (
@@ -54,10 +63,18 @@ export const AddToCartButton = ({ id, name, quantity, isIcon, className }) => {
 
 export const RemoveFromCartButton = ({ id, name }) => {
 	const [cart, setCart] = useCartContext();
+	const [user, setUser] = useUserContext();
+
 	const { toast } = useToast();
 	const removeFromCart = (id) => {
 		delete cart[id];
 		setCart({ ...cart });
+		setCookie("cart", JSON.stringify(cart));
+		if (Object.keys(user).length > 0) {
+			setUserCart(JSON.stringify(cart), user.user_id).then((res) => {
+				console.log(res);
+			});
+		}
 	};
 	return (
 		<ButtonIcon
@@ -77,6 +94,8 @@ export const RemoveFromCartButton = ({ id, name }) => {
 
 export function QuantityCartButton({ className, id }) {
 	const [cart, setCart] = useCartContext();
+	const [user, setUser] = useUserContext();
+
 	// console.log(product);
 	const addToCart = (quantity) => {
 		console.log(quantity);
@@ -86,6 +105,12 @@ export function QuantityCartButton({ className, id }) {
 			cart[id] = quantity;
 		}
 		setCart({ ...cart });
+		if (Object.keys(user).length > 0) {
+			setUserCart(cart, user.user_id).then((res) => {
+				console.log(res);
+			});
+		}
+		setCookie("cart", JSON.stringify(cart));
 		console.log(cart);
 	};
 

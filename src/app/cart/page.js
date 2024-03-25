@@ -4,8 +4,6 @@ import { getCart } from "@/lib/context/cart";
 import Image from "next/image";
 import { Button, ButtonIcon } from "@/components/ui/button";
 import Link from "next/link";
-import { isSessionValid } from "@/lib/classes/user";
-import groceryStore from "@/lib/classes/store";
 import {
 	RemoveFromCartButton,
 	QuantityCartButton,
@@ -13,11 +11,14 @@ import {
 import { useState, useEffect } from "react";
 import { db } from "@/lib/db";
 import { useCartContext } from "@/lib/context/cart";
+import { useUserContext } from "@/lib/context/user";
 
 export default function Cart() {
 	const [cart, setCart] = useCartContext();
+	const [user, setUser] = useUserContext();
 	const [cartProducts, setCartProducts] = useState([]);
 
+	// console.log("user", user != {});
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -130,7 +131,15 @@ export default function Cart() {
 					<p className='text-xl font-bold text-green-900'>Total:</p>
 					<p className='text-xl font-bold text-green-900'>${total}</p>
 				</span>
-				<Button className='shadow'>Checkout</Button>
+				{Object.keys(user).length > 0 ? (
+					<Link href='/cart/checkout'>
+						<Button className='shadow w-full'>Checkout</Button>
+					</Link>
+				) : (
+					<Link href={{ pathname: "/login", query: { from: "cart" } }}>
+						<Button className='shadow w-full'>Login to Checkout</Button>
+					</Link>
+				)}
 			</section>
 		</main>
 	);

@@ -2,7 +2,7 @@ import DepartmentsList from "@/components/departmentsList";
 
 const Grocery = () => {
 	return (
-		<main>
+		<main className='mainGreenCenter'>
 			<DepartmentsList />
 		</main>
 	);

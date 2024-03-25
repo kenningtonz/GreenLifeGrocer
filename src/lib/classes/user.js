@@ -32,15 +32,6 @@ export async function loginAccount(email, password) {
 	).then((res) => res.json());
 }
 
-export async function logoutAccount() {
-	return fetch(
-		`${db}/logout_account.php`,
-		dbBody({
-			// sessionID: localStorage.getItem("sessionID"),
-		})
-	).then((res) => res.json());
-}
-
 export async function resetPassword(id, code, password) {
 	return fetch(
 		`${db}/reset_password.php`,
@@ -68,11 +59,4 @@ export async function sendResetPasswordEmail(email) {
 			email: email,
 		})
 	).then((res) => res.json());
-}
-
-//returns user if valid and extends session
-export async function getSession(session_id) {
-	return fetch(`${db}/get_session.php`, dbBody({ session_id: session_id })).then(
-		(res) => res.json()
-	);
 }

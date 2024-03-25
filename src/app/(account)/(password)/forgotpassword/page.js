@@ -4,11 +4,8 @@ import { Button } from "@/components/ui/button";
 import { sendResetPasswordEmail } from "@/lib/classes/user";
 import Link from "next/link";
 import { useState } from "react";
-import groceryStore from "@/lib/classes/store";
 
 const ForgotPassword = () => {
-	const emailStored = groceryStore((state) => state.email);
-	console.log(emailStored);
 	const [error, setError] = useState("");
 	const [emailSent, setEmailSent] = useState(false);
 	async function handleSubmit(e) {
@@ -37,13 +34,7 @@ const ForgotPassword = () => {
 					</p>
 				) : (
 					<form onSubmit={handleSubmit} className='gap-4 flex flex-col'>
-						<Input
-							className=''
-							type='email'
-							id='email'
-							placeholder='Email'
-							defaultValue={emailStored}
-						/>
+						<Input className='' type='email' id='email' placeholder='Email' />
 
 						<p className='text-sm text-red-800'>{error}</p>
 						<Button variant='greenDark' type='submit'>

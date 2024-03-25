@@ -4,7 +4,7 @@ import Image from "next/image";
 async function DepartmentsList() {
 	const departmentsPHP = await getCategories();
 	const { categories: departments, error } = departmentsPHP;
-	console.log(departmentsPHP);
+	// console.log(departmentsPHP);
 	// const families = await getFamilies("Bakery");
 	if (error.id !== "0") {
 		return (
@@ -16,7 +16,7 @@ async function DepartmentsList() {
 	}
 
 	return (
-		<section className=' w-full p-4 py-8 max-w-5xl'>
+		<section className=' w-full p-4 py-8 max-w-5xl bg-white'>
 			<h2 className='text-3xl text-center text-green-900 mb-4'>
 				Shop by Department
 			</h2>

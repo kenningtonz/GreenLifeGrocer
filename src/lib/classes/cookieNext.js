@@ -1,34 +1,19 @@
-"use server";
-import { cookies } from "next/headers";
+"use client";
 
-// export async function setSessionCookie(sessionID) {
-// 	const cookieStore = cookies();
-// 	cookieStore.set("sessionID", sessionID, {
-// 		expires: 60 * 60 * 24 * 7,
-// 		path: "/",
-// 		sameSite: "none",
-// 		secure: true,
-// 	});
-// 	return cookieStore.get("sessionID");
-// }
+import Cookies from "js-cookie";
 
-// export async function getSessionCookie() {
-// 	const cookieStore = cookies();
-// 	return cookieStore.get("sessionID");
-// }
-
-export async function setNextCookie(name, value) {
-	const cookieStore = cookies();
-	cookieStore.set(name, value, {
-		expires: 60 * 60 * 24 * 7,
-		path: "/",
-		sameSite: "none",
-		secure: true,
-	});
-	return cookieStore.get("sessionID");
+export async function setCookie(name, value) {
+	const setNextCookie = () => {
+		Cookies.set(name, value, {
+			expires: 60 * 60 * 24,
+			path: "/",
+			httpOnly: true,
+		});
+		console.log(name, "cookie set");
+	};
+	return setNextCookie();
 }
 
-export async function getNextCookie(name) {
-	const cookieStore = cookies();
-	return cookieStore.get(name);
+export async function getCookie(name) {
+	return Cookies.get(name);
 }
