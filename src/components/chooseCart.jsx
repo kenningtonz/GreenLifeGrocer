@@ -1,27 +1,26 @@
 "use client";
 import { useCartContext } from "@/lib/context/cart";
 import { useUserContext } from "@/lib/context/user";
+import { setUserCart } from "@/lib/classes/cart";
 
 import {
 	AlertDialog,
 	AlertDialogAction,
-	AlertDialogCancel,
 	AlertDialogContent,
 	AlertDialogDescription,
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle,
-	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation";
 
-const ChooseCart = () => {
+const ChooseCart = ({ open, setOpen }) => {
 	const router = useRouter();
 	const [cart, setCart] = useCartContext();
 	const [user, setUser] = useUserContext();
 	return (
-		<AlertDialog>
-			<AlertDialogContent>
+		<AlertDialog open={open}>
+			<AlertDialogContent className='bg-white'>
 				<AlertDialogHeader>
 					<AlertDialogTitle>Choose Cart</AlertDialogTitle>
 					<AlertDialogDescription>
@@ -29,17 +28,23 @@ const ChooseCart = () => {
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>
-					<AlertDialogCancel
+					<AlertDialogAction
+						variant={"green"}
 						onClick={() => {
+							setOpen(false);
 							setUser({ ...user, cart: cart });
 							router.push("/account");
 						}}
 					>
 						Keep Current Cart
-					</AlertDialogCancel>
+					</AlertDialogAction>
+
 					<AlertDialogAction
+						variant={"default"}
 						onClick={() => {
-							setCart(user.cart);
+							setCart(JSON.parse(user.cart));
+							setUserCart(JSON.stringify(cart), user.id);
+							setOpen(false);
 							router.push("/account");
 						}}
 					>

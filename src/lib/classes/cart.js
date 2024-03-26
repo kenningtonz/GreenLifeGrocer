@@ -10,6 +10,7 @@ export async function getProductsByCart(cartArray) {
 }
 
 export async function setUserCart(cart, user_id) {
+	console.log("setUserCart", cart, user_id);
 	return fetch(
 		`${db}/set_cart.php`,
 		dbBody({
@@ -20,6 +21,7 @@ export async function setUserCart(cart, user_id) {
 }
 
 export async function completePurchase(cart, user_id) {
+	console.log("completePurchase", cart, user_id);
 	return fetch(
 		`${db}/complete_purchase.php`,
 		dbBody({

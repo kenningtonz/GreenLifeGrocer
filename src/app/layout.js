@@ -26,7 +26,7 @@ export default async function RootLayout({ children }) {
 	// const extendSession =
 	// 	session.error.id == 0 && Date.now() + 60 * 60 * 3 > session.session.date_end;
 	const user = session != null ? session.user.user : {};
-	const cart = session != null ? user.cart : cartCookie ?? [];
+	const cart = session != null ? user.cart : cartCookie ?? {};
 	console.log("user", user);
 	console.log("cart", cart);
 	// console.log(session.session.date_end);

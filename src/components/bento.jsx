@@ -1,11 +1,11 @@
 const BentoLayout = ({ className }) => {
 	return (
 		<section
-			className={`grid gap-8 grid-cols-[4fr_3fr_3fr] grid-rows-3 max-w-3xl ${className}`}
+			className={` grid gap-8 sm:grid-cols-[4fr_3fr_3fr] sm:grid-rows-3  max-w-3xl p-4 grid-cols-2 grid-rows-5 ${className}`}
 		>
 			<BentoCard
 				image='fruit.webp'
-				className='justify-end gap-2 shadow-pink-500 text-pink-950 '
+				className='justify-end gap-2 shadow-pink-500 text-pink-950 sm:order-1 order-2'
 				col={1}
 				row={2}
 			>
@@ -17,7 +17,7 @@ const BentoLayout = ({ className }) => {
 
 			<BentoCard
 				image='bread.webp'
-				className='shadow-blue-300  justify-center text-blue-950'
+				className='shadow-blue-300  justify-center text-blue-950 sm:order-2 order-1'
 				col={2}
 				row={1}
 			>
@@ -28,7 +28,7 @@ const BentoLayout = ({ className }) => {
 			</BentoCard>
 			<BentoCard
 				image='banana.webp'
-				className='aspect-square shadow-amber-600 text-amber-950 text-center'
+				className='aspect-square shadow-amber-600 text-amber-950 text-center order-3'
 				col={1}
 				row={1}
 			>
@@ -36,7 +36,7 @@ const BentoLayout = ({ className }) => {
 			</BentoCard>
 			<BentoCard
 				image='eggplant.webp'
-				className='aspect-square shadow-purple-600 text-purple-950 text-center justify-end'
+				className='aspect-square shadow-purple-600 text-purple-950 text-center justify-end order-4'
 				col={1}
 				row={1}
 			>
@@ -44,7 +44,7 @@ const BentoLayout = ({ className }) => {
 			</BentoCard>
 			<BentoCard
 				image='grapefruit.webp'
-				className='shadow-olive-700 justify-center gap-2 text-lime-950'
+				className='shadow-olive-700 justify-center gap-2 text-lime-950 order-5 '
 				col={2}
 				row={1}
 			>
@@ -56,7 +56,7 @@ const BentoLayout = ({ className }) => {
 
 			<BentoCard
 				image='kiwi.webp'
-				className='aspect-square shadow-cyan-600 text-cyan-950 text-center'
+				className='aspect-square shadow-cyan-600 text-cyan-950 text-center order-6'
 				col={1}
 				row={1}
 			>
@@ -70,7 +70,7 @@ const BentoCard = ({ image, className, col, row, children }) => {
 	return (
 		<div
 			style={{ "--image-url": `url(/images/home/${image})` }}
-			className={` shadow-[4px_4px_0_0] p-8 flex flex-col rounded-lg bg-cover min-h-30 col-span-${col} row-span-${row} ${className} bg-[image:var(--image-url)]`}
+			className={` shadow-[4px_4px_0_0] p-8 flex flex-col rounded-lg bg-cover min-h-10 sm:min-h-30 col-span-${col} row-span-${row} ${className} bg-[image:var(--image-url)]`}
 		>
 			{children}
 		</div>

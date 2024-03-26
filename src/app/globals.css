@@ -102,5 +102,5 @@ p {
 }
 
 .mainGreenCenter {
-	@apply bg-olive-100 flex justify-center items-center min-h-[90dvh];
+	@apply bg-olive-50 flex justify-center items-center min-h-[90dvh];
 }

@@ -29,7 +29,7 @@ export default async function GroceryPage({ departmentURL, subDepartmentURL }) {
 
 	if (activeDepartment === undefined) {
 		return (
-			<main>
+			<main className='mainGreenCenter'>
 				<section className=' rounded-lg bg-white shadow-sm p-4 '>
 					<h1 className=''>Department Not Found</h1>
 					<p>Sorry, we could not find the department you are looking for</p>
@@ -63,7 +63,7 @@ export default async function GroceryPage({ departmentURL, subDepartmentURL }) {
 
 	//TODO: if subdepartment is not found
 	return (
-		<main>
+		<main className='bg-olive-50'>
 			<DepartmentButtons
 				departments={departments}
 				activeDepartment={activeDepartment}

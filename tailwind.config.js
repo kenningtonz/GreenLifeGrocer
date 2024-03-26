@@ -1,7 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
 	darkMode: ["class"],
-	safelist: ["col-span-1", "col-span-2", "row-span-1", "row-span-2"],
+	safelist: [
+		"col-span-1",
+		"col-span-2",
+		"row-span-1",
+		"row-span-2",
+		"sm:col-span-2",
+		"sm:col-span-1",
+	],
 	content: [
 		"./pages/**/*.{js,jsx}",
 		"./components/**/*.{js,jsx}",

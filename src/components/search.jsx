@@ -7,12 +7,24 @@ import { getSearchHints } from "@/lib/classes/search";
 
 const SearchBar = () => {
 	const router = useRouter();
+	const pathname = usePathname();
+	const searchParams = useSearchParams();
+
+	const createQueryString = useCallback(
+		(name, value) => {
+			const params = new URLSearchParams(searchParams);
+			params.set(name, value);
+			return params.toString();
+		},
+		[searchParams]
+	);
+
 	function handleSearch(e) {
 		e.preventDefault();
 		const form = e.target;
 		const search = form.search.value;
 
-		router.push(pathname + "?" + createQueryString("search", search));
+		router.push("/grocery" + "?" + createQueryString("search", search));
 		console.log(search);
 	}
 
@@ -23,7 +35,7 @@ const SearchBar = () => {
 			placeholder='Search..'
 			name='search'
 			id='search'
-			className=''
+			className='max-w-64 w-full'
 			icon={<Search className='h-6 w-6' />}
 		/>
 	);

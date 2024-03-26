@@ -8,6 +8,7 @@ import { useUserContext } from "@/lib/context/user";
 import Cookies from "js-cookie";
 import { useRouter, useSearchParams } from "next/navigation";
 import Loader from "@/components/loader";
+import { Label } from "@/components/ui/label";
 
 const CreateAccount = () => {
 	const [user, setUser] = useUserContext();
@@ -47,6 +48,8 @@ const CreateAccount = () => {
 
 		console.log(create);
 		if (create.error.id === "0") {
+			console.log("create good");
+
 			// go to another page
 			const login = await loginAccount(email, password);
 			console.log(login);
@@ -66,29 +69,63 @@ const CreateAccount = () => {
 	}
 
 	return (
-		<main className='bg-olive-100 px-4 py-16 flex justify-center'>
-			<section className='max-w-md w-full rounded-lg bg-white shadow-sm p-4 '>
-				<h1 className='text-2xl font-bold text-green-900 mb-4'>Create Account</h1>
-				<form onSubmit={handleSubmit} className='gap-4 flex flex-col'>
-					<Input type='text' id='name_first' placeholder='First Name' required />
-					<Input type='text' id='name_last' placeholder='Last Name' required />
-					<Input type='email' id='email' placeholder='Email' required />
-					<Input type='password' id='password' placeholder='Password' required />
-					<p className='text-sm text-red-800'>{error}</p>
-					<Button variant='greenDark' type='submit'>
+		<main className='mainGreenCenter px-4 py-16 '>
+			<section className='max-w-md w-full rounded-lg bg-white shadow shadow-olive-500 p-4 '>
+				<h1 className='text-center text-2xl font-bold text-green-900 mb-4'>
+					Create Account
+				</h1>
+				<form onSubmit={handleSubmit} className='flex flex-col'>
+					<Label htmlFor='name_first'>First Name</Label>
+					<Input
+						className='mb-2'
+						type='text'
+						id='name_first'
+						placeholder='First Name'
+						required
+					/>
+					<Label htmlFor='name_last'>Last Name</Label>
+					<Input
+						className='mb-2'
+						type='text'
+						id='name_last'
+						placeholder='Last Name'
+						required
+					/>
+					<Label htmlFor='email'>Email</Label>
+					<Input
+						className='mb-2'
+						type='email'
+						id='email'
+						placeholder='Email'
+						required
+					/>
+					<Label htmlFor='password'>Password</Label>
+					<Input
+						className='mb-2'
+						type='password'
+						id='password'
+						placeholder='Password'
+						required
+					/>
+					<p className='text-sm text-red-800 text-center'>{error}</p>
+					<Button
+						className='shadow w-full my-2'
+						press={"pressed"}
+						variant='greenDark'
+						type='submit'
+					>
 						Create Account
 					</Button>
-					<div className='flex items-center justify-between flex-wrap'>
-						<p className='text-green-900 mt-4'>
-							Have an account?
-							<Link
-								href='/account/login'
-								className='ml-1 text-sm text-green-500  hover:underline'
-							>
-								Login
-							</Link>
-						</p>
-					</div>
+
+					<p className='text-green-900 text-center mt-2 self-center'>
+						Have an account?
+						<Link
+							href='/login'
+							className='ml-1 text-sm text-green-500  hover:underline '
+						>
+							Login
+						</Link>
+					</p>
 				</form>
 			</section>
 		</main>

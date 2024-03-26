@@ -11,6 +11,7 @@ import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useUserContext } from "@/lib/context/user";
 import { useCartContext } from "@/lib/context/cart";
 import Loader from "@/components/loader";
+import { Label } from "@/components/ui/label";
 
 const Login = () => {
 	const router = useRouter();
@@ -28,6 +29,7 @@ const Login = () => {
 	const [error, setError] = useState("");
 	const [user, setUser] = useUserContext();
 	const [cart, setCart] = useCartContext();
+	const [chooseCartActive, setChooseCartActive] = useState(false);
 
 	const setCookie = async (session) => {
 		Cookies.set("session", session, {
@@ -49,9 +51,13 @@ const Login = () => {
 			setUser(login.user);
 			setCookie(login.user.session);
 			if (login.user.cart != "" && Object.keys(cart).length > 0) {
-				return <ChooseCart />;
+				setChooseCartActive(true);
+			} else {
+				if (login.user.cart != "") {
+					setCart(JSON.parse(login.user.cart));
+				}
+				router.push(fromPage == "cart" ? "/cart/checkout" : "/account");
 			}
-			router.push(fromPage == "cart" ? "/cart/checkout" : "/account");
 		} else {
 			setError(login.error.error_message);
 			console.log(error);
@@ -63,43 +69,57 @@ const Login = () => {
 	}
 	return (
 		<main className='mainGreenCenter'>
-			<section className='max-w-md rounded-lg bg-white shadow-sm p-4 '>
-				<h1 className='text-2xl font-bold text-green-900 mb-4'>Login</h1>
-				<form onSubmit={handleSubmit} className='gap-4 flex flex-col'>
+			<section className='max-w-md w-full rounded-lg bg-white shadow shadow-olive-500 p-4 '>
+				<h1 className='text-center  text-2xl font-bold text-green-900 mb-4'>
+					Login
+				</h1>
+				<form onSubmit={handleSubmit} className='flex flex-col'>
+					<Label htmlFor='email'>Email</Label>
 					<Input
-						className=''
+						className='mb-4'
 						type='email'
 						id='email'
 						placeholder='Email'
-						// onChange={(e) => setEmail(e.target.value)}
+						required
 					/>
-					<Input type='password' id='password' placeholder='Password' />
+					<Label htmlFor='password'>Password</Label>
+					<Input
+						type='password'
+						className='mb-2'
+						id='password'
+						placeholder='Password'
+						required
+					/>
 					<Link
 						href='/forgotpassword'
-						className='ml-1 text-sm text-green-500  hover:underline'
+						className='ml-1 text-sm text-green-500 mb-2 hover:underline'
 					>
 						Forgot password?
 					</Link>
-					<div className='flex items-center justify-between flex-wrap'>
-						<p className='text-green-900 mt-4'>
-							Dont have an account?
-							<Link
-								href={{
-									pathname: "/create",
-									query: { from: fromPage == undefined ? "login" : fromPage },
-								}}
-								className='ml-1 text-sm text-green-500  hover:underline'
-							>
-								Create Account
-							</Link>
-						</p>
-					</div>
-					<p className='text-sm text-red-800'>{error}</p>
-					<Button variant='greenDark' type='submit'>
+					<p className='text-sm text-red-800 text-center'>{error}</p>
+					<Button
+						className='shadow w-full my-2'
+						press={"pressed"}
+						variant='greenDark'
+						type='submit'
+					>
 						Login
 					</Button>
+					<p className='text-green-900 text-center mt-2'>
+						Dont have an account?{" "}
+						<Link
+							href={{
+								pathname: "/create",
+								query: { from: fromPage == undefined ? "login" : fromPage },
+							}}
+							className='ml-1 text-sm text-green-500  hover:underline'
+						>
+							Create Account
+						</Link>
+					</p>
 				</form>
 			</section>
+			<ChooseCart open={chooseCartActive} setOpen={setChooseCartActive} />
 		</main>
 	);
 };

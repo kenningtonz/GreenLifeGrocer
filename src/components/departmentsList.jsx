@@ -2,13 +2,15 @@ import { getFamilies, getCategories } from "@/lib/classes/category";
 import Link from "next/link";
 import Image from "next/image";
 async function DepartmentsList() {
-	const departmentsPHP = await getCategories();
+	const departmentsPHP = await getCategories().catch((error) => {
+		console.log("Error", error);
+	});
 	const { categories: departments, error } = departmentsPHP;
 	// console.log(departmentsPHP);
 	// const families = await getFamilies("Bakery");
 	if (error.id !== "0") {
 		return (
-			<section className='bg-white p-8'>
+			<section className=' p-8'>
 				<h1 className='text-2xl text-center'>Departments Not Found</h1>
 				<p className='text-center'>Sorry, we could not find the departments</p>
 			</section>
@@ -16,7 +18,7 @@ async function DepartmentsList() {
 	}
 
 	return (
-		<section className=' w-full p-4 py-8 max-w-5xl bg-white'>
+		<section className=' w-full p-4 py-8 max-w-5xl'>
 			<h2 className='text-3xl text-center text-green-900 mb-4'>
 				Shop by Department
 			</h2>

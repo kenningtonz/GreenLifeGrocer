@@ -57,7 +57,7 @@ export default function Account() {
 			router.push("/login");
 		}
 		setIsMounted(true);
-	}, []);
+	}, [user]);
 
 	if (!isMounted) {
 		return <Loader />;
@@ -73,6 +73,7 @@ export default function Account() {
 					onClick={() => {
 						logoutAccount();
 						setIsMounted(false);
+						setUser({});
 					}}
 				>
 					Logout

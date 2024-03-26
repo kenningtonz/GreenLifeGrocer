@@ -1,7 +1,9 @@
 import { db, dbBody } from "@/lib/db";
 
 export async function getCategories() {
-	return fetch(`${db}/get_categories.php`, dbBody({})).then((res) => res.json());
+	return fetch(`${db}/get_categories.php`, dbBody({}))
+		.then((res) => res.json())
+		.catch((error) => console.error("Error fetching data:", error));
 }
 
 export async function getFamilies(category) {

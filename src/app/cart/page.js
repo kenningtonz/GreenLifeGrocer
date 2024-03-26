@@ -36,9 +36,9 @@ export default function Cart() {
 
 	if (Object.keys(cart).length === 0) {
 		return (
-			<main className='p-4'>
-				<h1 className='text-xl text-center'>Your Cart</h1>
-				<p className='text-center'>Your cart is empty</p>
+			<main className='p-4 mainGreenCenter flex-col'>
+				<h1 className='text-xl text-center'>Your Cart is empty</h1>
+				{/* <p className='text-center'>Your cart is empty</p> */}
 			</main>
 		);
 	}
@@ -66,17 +66,17 @@ export default function Cart() {
 	const total = Math.round((subTotal + tax + Number.EPSILON) * 100) / 100;
 
 	return (
-		<main className='sm:px-8 py-8 px-4  flex flex-col gap-4'>
+		<main className='sm:px-8 py-8 px-4  mainGreenCenter flex-col gap-4 '>
 			<h1 className='text-2xl text-green-900 font-bold text-center'>Your Cart</h1>
-			<table className='w-full border-collapse table-auto'>
+			<table className='w-full border-collapse table-auto shadow shadow-olive-500 rounded-t-lg'>
 				<thead className='text-center font-bold text-lg bg-olive/80'>
 					<tr className=''>
-						<th className='p-2 rounded-l-lg text-left'>Product</th>
+						<th className='p-2 rounded-tl-lg text-left'>Product</th>
 						<th className='p-2'>Price</th>
 						<th className='p-2'>Quantity</th>
 						<th className='p-2'>Total</th>
 						<th className='p-2'>Tax</th>
-						<th className='p-2 rounded-r-lg'>x</th>
+						<th className='p-2 rounded-tr-lg'>x</th>
 					</tr>
 				</thead>
 				<tbody className=' '>
@@ -85,7 +85,7 @@ export default function Cart() {
 						return (
 							<tr
 								key={`${product.product_name}-cart-${index}`}
-								className={`p-2 border-b-2 border-olive my-2 rounded-lg text-center`}
+								className={`p-2 border-b-2 border-olive my-2 rounded-lg text-center bg-white`}
 							>
 								<td className='flex gap-1 items-center p-2 text-left'>
 									<Image

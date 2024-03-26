@@ -51,27 +51,19 @@ const ProductsPaged = ({ products }) => {
 	const currentPage =
 		searchParams.get("page") !== null ? parseInt(searchParams.get("page")) : 1;
 
-	const search =
-		searchParams.get("search") !== null ? searchParams.get("search") : "";
-
-	// const searchedProducts =
-	// 	search.length > 0 ? await getSearch(search) : products;
-
-	// console.log(searchedProducts);
 	const productsPerPage = 12;
 	const pagedProducts = PagedProducts(
 		SortProducts(products, sort),
 		productsPerPage
 	);
 
-	// const numOfPages = Math.ceil(products.length / productsPerPage);
 	return (
 		<section className='p-4 px-8 '>
 			{currentPage > pagedProducts.length ? (
 				<p>no products</p>
 			) : (
 				<>
-					<div className='flex flex-wrap gap-6'>
+					<div className='flex flex-wrap gap-6 justify-center'>
 						{pagedProducts[currentPage - 1].map((product, index) => {
 							return (
 								<div

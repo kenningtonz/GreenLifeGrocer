@@ -33,9 +33,12 @@ const InputWithIconButton = React.forwardRef(
 					ref={ref}
 					{...props}
 				/>
-				<Button type='submit ' className='join-item'>
+				<button
+					type='submit'
+					className='join-item bg-pink text-pink-950 h-10 px-4 py-2 rounded-r-lg hover:text-pink-800'
+				>
 					{icon}
-				</Button>
+				</button>
 			</form>
 		);
 	}

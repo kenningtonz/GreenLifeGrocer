@@ -11,15 +11,18 @@ export const AddToCartButton = ({ id, name, quantity, isIcon, className }) => {
 	const [user, setUser] = useUserContext();
 	const [cart, setCart] = useCartContext();
 	const { toast } = useToast();
+
 	const addToCart = () => {
 		if (Object.keys(cart).includes(id)) {
 			cart[id] += quantity;
 		} else {
 			cart[id] = quantity;
 		}
+		console.log(cart);
 		setCart({ ...cart });
 		if (Object.keys(user).length > 0) {
-			setUserCart(JSON.stringify(cart), user.user_id).then((res) => {
+			console.log("usercart");
+			setUserCart(JSON.stringify(cart), user.id).then((res) => {
 				console.log(res);
 			});
 		}
@@ -71,7 +74,7 @@ export const RemoveFromCartButton = ({ id, name }) => {
 		setCart({ ...cart });
 		setCookie("cart", JSON.stringify(cart));
 		if (Object.keys(user).length > 0) {
-			setUserCart(JSON.stringify(cart), user.user_id).then((res) => {
+			setUserCart(JSON.stringify(cart), user.id).then((res) => {
 				console.log(res);
 			});
 		}
@@ -105,8 +108,9 @@ export function QuantityCartButton({ className, id }) {
 			cart[id] = quantity;
 		}
 		setCart({ ...cart });
+
 		if (Object.keys(user).length > 0) {
-			setUserCart(cart, user.user_id).then((res) => {
+			setUserCart(cart, user.id).then((res) => {
 				console.log(res);
 			});
 		}

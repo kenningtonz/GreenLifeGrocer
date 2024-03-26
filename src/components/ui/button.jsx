@@ -16,7 +16,8 @@ const buttonVariants = cva(
 					"bg-olive/80 text-green-900 hover:bg-olive/90 data-[active=true]:bg-green data-[active=true]:text-white",
 				outline:
 					"border border-neutral-200 bg-white hover:bg-neutral-100 hover:text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:hover:bg-neutral-800 dark:hover:text-neutral-50",
-				greenDark: "bg-green-900 text-green-100 hover:bg-green-900/90 ",
+				greenDark:
+					"shadow-green-800 bg-green-900 text-green-100 hover:bg-green-900/90 ",
 				ghost:
 					"hover:bg-neutral-100 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-50",
 				link:

@@ -15,6 +15,7 @@ import Hero from "@/components/hero";
 import { Suspense } from "react";
 import { getSession } from "@/lib/classes/user";
 import Link from "next/link";
+import Loading from "@/components/loader";
 
 export default async function Home() {
 	const productsPHP = await getRandomProducts(4);
@@ -23,7 +24,7 @@ export default async function Home() {
 
 	return (
 		<main className='py-8 flex flex-col justify-between items-center'>
-			<section className='w-full flex justify-center'>
+			<section className='w-full flex justify-center mb-4'>
 				<Carousel
 					className='w-full max-w-5xl'
 					opts={{ loop: true }}
@@ -33,7 +34,7 @@ export default async function Home() {
 						<CarouselItem className='py-4 px-2'>
 							<Hero image={"hero2.webp"} className={" justify-center items-center"}>
 								<div
-									className={` max-w-[50%] bg-white/80 rounded-tl-[60px] rounded-br-[60px] p-4 flex flex-col items-center justify-center text-center`}
+									className={` sm:max-w-[50%] bg-white/80 rounded-tl-[60px] rounded-br-[60px] p-4 flex flex-col items-center justify-center text-center`}
 								>
 									<Image
 										src='/images/logo.png'
@@ -74,7 +75,7 @@ export default async function Home() {
 								</div>
 							</Hero>
 						</CarouselItem>
-						<CarouselItem>
+						<CarouselItem className='py-4 px-2'>
 							<Hero image={"hero3.webp"} className={"justify-center items-end "}>
 								<div className={`max-w-[50%] `}>
 									<h2 className='mb-1 text-xl font-bold fontSpecial text-green-900'>
@@ -98,7 +99,7 @@ export default async function Home() {
 				className={` p-4 mt-12 mb-8 w-full bg-olive/50 flex flex-col items-center`}
 			>
 				<h2 className='text-3xl text-center text-green-900'>Featured Products</h2>
-				<div className='mt-2 flex gap-4 sm:flex-nowrap flex-wrap p-4  max-w-5xl'>
+				<div className='mt-2 flex gap-4 sm:flex-nowrap flex-wrap p-4 justify-center max-w-5xl'>
 					{error.id === "0" ? (
 						<>
 							{products.map((product) => {
@@ -114,7 +115,7 @@ export default async function Home() {
 					) : null}
 				</div>
 			</section>
-			<Suspense fallback={<div>Loading...</div>}>
+			<Suspense fallback={<Loading />}>
 				<DepartmentsList />
 			</Suspense>
 
