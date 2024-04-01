@@ -1,7 +1,7 @@
 "use client";
 import { InputWithLabel } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { createAccount, loginAccount } from "@/lib/classes/user";
+import { createAccount } from "@/lib/classes/user";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useUserContext } from "@/lib/context/user";
@@ -45,7 +45,6 @@ const CreateAccount = () => {
 			path: "/",
 			httpOnly: true,
 		});
-		// router.refresh();
 	};
 
 	const onSubmit = methods.handleSubmit(async (data) => {
@@ -66,14 +65,6 @@ const CreateAccount = () => {
 			setCookie(createData.session);
 			methods.reset();
 			router.push(fromPage == "cart" ? "/cart/checkout" : "/account");
-
-			// const loginData = await fetchData(loginAccount, data.email, data.password);
-			// if (typeof createData === "string") {
-			// 	setError(loginData);
-			// } else {
-			// 	console.log(loginData);
-
-			// }
 		}
 	});
 
@@ -98,6 +89,7 @@ const CreateAccount = () => {
 							label='First Name'
 							id='name_first'
 							type='text'
+							isRequired={true}
 							placeholder='First Name'
 						/>
 
@@ -106,6 +98,7 @@ const CreateAccount = () => {
 							label='Last Name'
 							id='name_last'
 							type='text'
+							isRequired={true}
 							placeholder='Last Name'
 						/>
 						<InputWithLabel

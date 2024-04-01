@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 export async function setCookie(name, value) {
 	const setNextCookie = () => {
 		Cookies.set(name, value, {
-			maxAge: 60 * 60 * 24,
+			expires: 1,
 			path: "/",
 			httpOnly: false,
 		});
@@ -16,4 +16,12 @@ export async function setCookie(name, value) {
 
 export async function getCookie(name) {
 	return Cookies.get(name);
+}
+
+export async function deleteCookie(name) {
+	const deleteNextCookie = () => {
+		Cookies.remove(name);
+		console.log(name, "cookie deleted");
+	};
+	return deleteNextCookie();
 }

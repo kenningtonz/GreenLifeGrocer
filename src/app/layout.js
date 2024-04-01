@@ -11,8 +11,7 @@ import { CartProvider } from "@/lib/context/cart";
 import { UserProvider } from "@/lib/context/user";
 import { getSession } from "@/lib/classes/session";
 import { cookies } from "next/headers";
-import SetSession from "@/components/session";
-
+import { deleteCookie } from "@/lib/classes/cookieNext";
 export const metadata = {
 	title: "GreenLife Grocer",
 	description: "Grocery Store",
@@ -21,12 +20,19 @@ export const metadata = {
 export default async function RootLayout({ children }) {
 	const session = await getSession();
 	console.log("session", session);
+
+	let cart = {};
 	const cartCookie = cookies().get("cart")?.value;
-	console.log("cartCookie", cartCookie);
+	try {
+		cart = session != null ? user.cart : JSON.parse(cartCookie) ?? {};
+	} catch (e) {
+		console.log(e);
+	}
+	// console.log("cartCookie", JSON.parse(cartCookie));
 	// const extendSession =
 	// 	session.error.id == 0 && Date.now() + 60 * 60 * 3 > session.session.date_end;
 	const user = session != null ? session.user : {};
-	const cart = session != null ? user.cart : cartCookie ?? {};
+	// const cart = session != null ? user.cart : JSON.parse(cartCookie) ?? {};
 	console.log("user", user);
 	console.log("cart", cart);
 	// console.log(session.session.date_end);

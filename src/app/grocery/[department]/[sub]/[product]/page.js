@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { QuantityButton } from "@/components/quantityButton";
 import { getProduct, getProducts } from "@/lib/classes/product";
 import Link from "next/link";
@@ -82,16 +81,13 @@ async function Product({ params }) {
 
 				<Rating num={stars} />
 
-				<p className='text-right text-2xl'>
-					${avg_price} per {unit}
-				</p>
+				<div className='flex flex-wrap gap-4 justify-center sm:justify-between items-center'>
+					<p className='text-right text-xl '>
+						${avg_price} / {unit}
+					</p>
 
-				<QuantityButton
-					className='child50'
-					isCart={false}
-					id={id}
-					name={product_name}
-				/>
+					<QuantityButton className='' isCart={false} id={id} name={product_name} />
+				</div>
 			</section>
 			<section className='child100  p-4 rounded-2xl shadow-md bg-olive-200 shadow-olive-600/50'>
 				<p className='text-base'>{product_description}</p>

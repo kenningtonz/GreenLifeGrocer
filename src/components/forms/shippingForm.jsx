@@ -16,7 +16,6 @@ const ShippingForm = ({
 	setUser,
 	extraFunction,
 	required,
-	isGuest,
 	buttonText,
 }) => {
 	const methods = useForm({ mode: "onChange" });
@@ -24,10 +23,11 @@ const ShippingForm = ({
 	const onSubmit = methods.handleSubmit(async (data) => {
 		if (data.email != user.email) {
 			const checkEmailData = await fetchData(checkEmail, data.email);
-			if (typeof checkEmailData === "object" && checkEmailData.error.id == 2) {
+
+			if (typeof checkEmailData === "string") {
 				methods.setError("email", {
 					type: "manual",
-					message: "Email already in use",
+					message: "Email already in use. Please use another email or login.",
 				});
 				return;
 			}
@@ -35,6 +35,7 @@ const ShippingForm = ({
 
 		setUser({
 			...user,
+			email: data.email,
 			shipping_name_first: data.name_first,
 			shipping_name_last: data.name_last,
 			shipping_phone: data.phone,
@@ -43,12 +44,6 @@ const ShippingForm = ({
 			shipping_province: data.shipping_province,
 			shipping_postal_code: data.shipping_postal_code,
 		});
-		if (isGuest) {
-			setUser({
-				...user,
-				email: data.email,
-			});
-		}
 		if (extraFunction) {
 			extraFunction();
 		}
@@ -74,8 +69,8 @@ const ShippingForm = ({
 							isRequired={true}
 							type='text'
 							placeholder='email'
-							// disabled={!isGuest}
-							defaultValue={isGuest ? null : user.email}
+							disabled={user.id != -1}
+							defaultValue={user.email}
 						/>
 					</div>
 					<div className='child50'>
@@ -86,7 +81,7 @@ const ShippingForm = ({
 							isRequired={true}
 							type='text'
 							placeholder='First Name'
-							defaultValue={isGuest ? null : user.shipping_name_first}
+							defaultValue={user.shipping_name_first}
 						/>
 					</div>
 					<div className='child50'>
@@ -97,7 +92,7 @@ const ShippingForm = ({
 							id='name_last'
 							type='text'
 							placeholder='Last Name'
-							defaultValue={isGuest ? null : user.shipping_name_last}
+							defaultValue={user.shipping_name_last}
 						/>
 					</div>
 					<div className='child50'>
@@ -108,7 +103,7 @@ const ShippingForm = ({
 							id='phone'
 							type='tel'
 							placeholder='Phone'
-							defaultValue={isGuest ? null : user.shipping_phone}
+							defaultValue={user.shipping_phone}
 						/>
 					</div>
 				</fieldset>
@@ -124,7 +119,7 @@ const ShippingForm = ({
 							type='text'
 							isRequired={required}
 							placeholder='Address'
-							defaultValue={isGuest ? null : user.shipping_address}
+							defaultValue={user.shipping_address}
 						/>
 					</div>
 					<div className='child50'>
@@ -135,7 +130,7 @@ const ShippingForm = ({
 							type='text'
 							isRequired={required}
 							placeholder='City'
-							defaultValue={isGuest ? null : user.shipping_city}
+							defaultValue={user.shipping_city}
 						/>
 					</div>
 					<div className='child50'>
@@ -146,7 +141,7 @@ const ShippingForm = ({
 							isRequired={required}
 							type='text'
 							placeholder='Province'
-							defaultValue={isGuest ? null : user.shipping_province}
+							defaultValue={user.shipping_province}
 						/>
 					</div>
 					<div className='child50'>
@@ -157,7 +152,7 @@ const ShippingForm = ({
 							type='text'
 							isRequired={required}
 							placeholder='Postal Code'
-							defaultValue={isGuest ? null : user.shipping_postal_code}
+							defaultValue={user.shipping_postal_code}
 						/>
 					</div>
 				</fieldset>

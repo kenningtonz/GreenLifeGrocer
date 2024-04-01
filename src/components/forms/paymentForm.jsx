@@ -58,6 +58,16 @@ const PaymentForm = ({
 					billing_province: data.billing_province,
 					billing_postal_code: data.billing_postal_code,
 				});
+			} else {
+				setUser({
+					...user,
+					billing_name_first: user.shipping_name_first,
+					billing_name_last: user.shipping_name_last,
+					billing_address: user.shipping_address,
+					billing_city: user.shipping_city,
+					billing_province: user.shipping_province,
+					billing_postal_code: user.shipping_postal_code,
+				});
 			}
 			setPaymentInfo({
 				card_number: data.card_number,
@@ -94,6 +104,7 @@ const PaymentForm = ({
 							label='Card Number'
 							id='card_number'
 							type='text'
+							isRequired={true}
 							defaultValue={paymentInfo.card_number}
 						/>
 					</div>
@@ -102,7 +113,9 @@ const PaymentForm = ({
 							validation={expiryDate_validation}
 							label='Expiry Date'
 							id='expiry_date'
+							placeholder='MM/YY'
 							type='text'
+							isRequired={true}
 							defaultValue={paymentInfo.expiry_date}
 						/>
 					</div>
@@ -111,6 +124,7 @@ const PaymentForm = ({
 							validation={cvv_validation}
 							label='CVV'
 							id='cvv'
+							isRequired={true}
 							type='text'
 							defaultValue={paymentInfo.cvv}
 						/>
@@ -132,8 +146,9 @@ const PaymentForm = ({
 									label='First Name'
 									id='billing_name_first'
 									type='text'
+									isRequired={true}
 									placeholder='First Name'
-									defaultValue={isGuest ? null : user.shipping_name_first}
+									defaultValue={user.shipping_name_first}
 								/>
 							</div>
 							<div className='child50'>
@@ -142,8 +157,9 @@ const PaymentForm = ({
 									label='Last Name'
 									id='billing_name_last'
 									type='text'
+									isRequired={true}
 									placeholder='Last Name'
-									defaultValue={isGuest ? null : user.billing_name_last}
+									defaultValue={user.billing_name_last}
 								/>
 							</div>
 							<div className='child100'>
@@ -152,8 +168,9 @@ const PaymentForm = ({
 									label='Address'
 									id='billing_address'
 									type='text'
+									isRequired={true}
 									placeholder='Address'
-									defaultValue={isGuest ? null : user.billing_address}
+									defaultValue={user.billing_address}
 								/>
 							</div>
 							<div className='child50'>
@@ -162,8 +179,9 @@ const PaymentForm = ({
 									label='City'
 									id='billing_city'
 									type='text'
+									isRequired={true}
 									placeholder='City'
-									defaultValue={isGuest ? null : user.billing_city}
+									defaultValue={user.billing_city}
 								/>
 							</div>
 							<div className='child50'>
@@ -172,8 +190,9 @@ const PaymentForm = ({
 									label='Province'
 									id='billing_province'
 									type='text'
+									isRequired={true}
 									placeholder='Province'
-									defaultValue={isGuest ? null : user.billing_province}
+									defaultValue={user.billing_province}
 								/>
 							</div>
 							<div className='child50'>
@@ -182,8 +201,9 @@ const PaymentForm = ({
 									label='Postal Code'
 									id='billing_postal_code'
 									type='text'
+									isRequired={true}
 									placeholder='Postal Code'
-									defaultValue={isGuest ? null : user.billing_postal_code}
+									defaultValue={user.billing_postal_code}
 								/>
 							</div>
 						</fieldset>

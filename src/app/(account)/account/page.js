@@ -64,15 +64,15 @@ export default function Account() {
 					Logout
 				</Button>
 
-				<Tabs defaultValue='overview' className='  gap-4 mt-2 transition-[height] '>
+				<Tabs defaultValue='details' className='  gap-4 mt-2 transition-[height] '>
 					<TabsList className='' horizontal={false}>
-						<TabsTrigger value='overview'>Overview</TabsTrigger>
+						{/* <TabsTrigger value='overview'>Overview</TabsTrigger> */}
 						<TabsTrigger value='details'>Personal Info</TabsTrigger>
 						<TabsTrigger value='history'>Purchase History</TabsTrigger>
 					</TabsList>
-					<TabsContent value='overview' className='p-4'>
+					{/* <TabsContent value='overview' className='p-4'>
 						<p className='text-green-900'>Welcome to your account</p>
-					</TabsContent>
+					</TabsContent> */}
 					<TabsContent value='details' className='p-4'>
 						<ShippingForm
 							user={user}

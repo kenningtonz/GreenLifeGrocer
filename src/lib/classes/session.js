@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { db, dbBody } from "@/lib/db";
+import { setCookie } from "./cookieNext";
 
 export async function getSession() {
 	const session_id = cookies().get("session")?.value;
@@ -15,6 +16,9 @@ export async function getSession() {
 	if (data != null && data.error.id === "0") {
 		//extend session
 		console.log("data", data);
+		// const session = data.session;
+		// setCookie("sessionid", session_id);
+
 		return data;
 	} else {
 		return null;

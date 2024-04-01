@@ -17,6 +17,7 @@ export default function Cart() {
 	const [cartProducts, setCartProducts] = useState([]);
 
 	useEffect(() => {
+		console.log("cart", cart);
 		fetchData(getProductsByCart, cart).then((data) => {
 			if (typeof data === "string") {
 				console.log(data);

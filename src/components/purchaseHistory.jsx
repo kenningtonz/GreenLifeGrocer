@@ -16,10 +16,10 @@ function PurchaseHistory({ invoiceData }) {
 		<section className=''>
 			{/* <p className='text-green-900'>Purchase History</p> */}
 			<ul className='w-full'>
-				{invoiceData.invoices.map((invoice) => {
+				{invoiceData.invoices.map((invoice, index) => {
 					return (
 						<li
-							key={invoice.code}
+							key={`${invoice.code}-${index}`}
 							className='bg-olive-100 rounded-lg p-4 cursor-pointer hover:bg-olive-200'
 						>
 							<Link href={`/invoices/${invoice.code}`}>

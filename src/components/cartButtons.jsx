@@ -14,9 +14,12 @@ export const AddToCartButton = ({ id, name, quantity, isIcon, className }) => {
 	const { toast } = useToast();
 
 	const addToCart = () => {
+		console.log(quantity);
+
 		if (Object.keys(cart).includes(id)) {
 			cart[id] += quantity;
 		} else {
+			console.log(id);
 			cart[id] = quantity;
 		}
 		console.log(cart);
@@ -26,6 +29,7 @@ export const AddToCartButton = ({ id, name, quantity, isIcon, className }) => {
 				console.log(res);
 			});
 		}
+		console.log(JSON.stringify(cart));
 		setCookie("cart", JSON.stringify(cart));
 	};
 
@@ -124,7 +128,7 @@ export function QuantityCartButton({ className, id }) {
 	};
 
 	return (
-		<div className={`flex items-center ${className}`}>
+		<div className={`flex items-center justify-center ${className}`}>
 			<ButtonIcon
 				Icon={Minus}
 				color='pink'

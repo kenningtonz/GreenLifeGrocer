@@ -12,6 +12,16 @@ export async function createAccount(email, password, name_last, name_first) {
 	);
 }
 
+export async function createAccountGuest(guest, password) {
+	return fetch(
+		`${db}/create_account_guest.php`,
+		dbBody({
+			guest: guest,
+			password: password,
+		})
+	);
+}
+
 // export async function createAccount(email, password, name_last, name_first) {
 // 	return fetch(`https://db.kennedyadams.ca/greenlife/create_account.php`, {
 // 		method: "POST",

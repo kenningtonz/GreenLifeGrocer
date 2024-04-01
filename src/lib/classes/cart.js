@@ -1,6 +1,7 @@
 import { db, dbBody } from "@/lib/db";
 
 export async function getProductsByCart(cartArray) {
+	console.log("getProductsByCart", cartArray);
 	return fetch(
 		`${db}/get_products_by_cart.php`,
 		dbBody({

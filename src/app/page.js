@@ -54,7 +54,7 @@ export default async function Home() {
 									<h2 className='mb-1 text-xl font-bold fontSpecial text-green-900'>
 										Discover the Bounty of Nature with Fresh Fruits
 									</h2>
-									<p className='mb-2  text-lg text-green'>
+									<p className='mb-2  text-lg text-green sm:block hidden'>
 										Indulge in the natural sweetness and vibrant colors of our
 										hand-selected fruit collection. From juicy strawberries to exotic
 										mangoes, our fruits are bursting with flavor and packed with essential
@@ -78,7 +78,7 @@ export default async function Home() {
 									<h2 className='mb-1 text-xl font-bold fontSpecial text-green-900'>
 										Nourish Your Body with Healthy Eating Habits
 									</h2>
-									<p className='mb-2  text-lg text-green'>
+									<p className='mb-2  text-lg text-green  sm:block hidden'>
 										Healthy eating isn&apos;t just about what you eat; it&apos;s a
 										lifestyle that nurtures your body and mind. At our store, we&apos;re
 										committed to empowering you with the tools and knowledge to make

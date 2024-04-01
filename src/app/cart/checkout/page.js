@@ -7,16 +7,20 @@ import Link from "next/link";
 import Loader from "@/components/loader";
 import { getProductsByCart, completePurchase } from "@/lib/classes/cart";
 import { useRouter } from "next/navigation";
-
+import { InputWithLabel } from "@/components/ui/input";
+import { password_validation } from "@/lib/utils/inputValidations";
 import { fetchData } from "@/lib/db";
 import ShippingForm from "@/components/forms/shippingForm";
 import PaymentForm from "@/components/forms/paymentForm";
 
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
+import { createAccountGuest } from "@/lib/classes/user";
+import { setCookie, deleteCookie } from "@/lib/classes/cookieNext";
+import { dateFormatter } from "@/lib/utils/dateFormatter";
 
 export default function Checkout() {
 	const isBrowser = () => typeof window !== "undefined"; //The approach recommended by Next.js
-
+	const methods = useForm({ mode: "onBlur" });
 	function scrollToTop() {
 		if (!isBrowser()) return;
 		window.scrollTo({ top: 0, behavior: "smooth" });
@@ -27,8 +31,9 @@ export default function Checkout() {
 	const [stepIndex, setStepIndex] = useState(0);
 	const [cart, setCart] = useCartContext();
 	const [cartProducts, setCartProducts] = useState([]);
-	const [guest, setGuest] = useState({ id: -1 });
+	const [checkoutUser, setCheckoutUser] = useState({});
 	const [isGuest, setIsGuest] = useState(false);
+	const [guestCreated, setGuestCreated] = useState(false);
 	const [error, setError] = useState("");
 	const router = useRouter();
 	const [paymentInfo, setPaymentInfo] = useState({
@@ -43,9 +48,7 @@ export default function Checkout() {
 		if (Object.keys(cart).length === 0 && stepIndex != 3) {
 			router.push("/cart");
 		}
-		if (Object.keys(user).length === 0) {
-			setIsGuest(true);
-		}
+
 		fetchData(getProductsByCart, cart).then((data) => {
 			if (typeof data === "string") {
 				console.log(data);
@@ -57,28 +60,75 @@ export default function Checkout() {
 		setIsMounted(true);
 	}, [cart]);
 
+	useEffect(() => {
+		if (Object.keys(user).length === 0 && stepIndex != 3) {
+			setIsGuest(true);
+			setCheckoutUser({
+				id: -1,
+				email: null,
+				shipping_name_first: null,
+				shipping_name_last: null,
+				shipping_address: null,
+				shipping_city: null,
+				shipping_province: null,
+				shipping_postal_code: null,
+				shipping_phone: null,
+				same_as: 0,
+				billing_name_first: null,
+				billing_name_last: null,
+				billing_address: null,
+				billing_city: null,
+				billing_province: null,
+				billing_postal_code: null,
+			});
+		} else {
+			setCheckoutUser(user);
+		}
+	}, []);
+
 	const complete = async (e) => {
 		e.preventDefault();
 		setCompleted(true);
-		// console.log("complete");
-		// console.log(user);
-		const completeData = await fetchData(
-			completePurchase,
-			cart,
-			isGuest ? guest : user
-		);
+		const completeData = await fetchData(completePurchase, cart, checkoutUser);
 		if (typeof completeData === "string") {
 			setError(completeData);
 		} else {
 			setCart({});
 			setInvoice(completeData);
 			setStepIndex(3);
+			deleteCookie("cart");
 		}
 
 		console.log(completeData);
 	};
 
 	const steps = ["Shipping", "Payment", "Review", "Complete"];
+
+	const createAccountSubmit = methods.handleSubmit(
+		async (data) => {
+			console.log(checkoutUser);
+			const createData = await fetchData(
+				createAccountGuest,
+				checkoutUser,
+				data.password
+			);
+			console.log(createData);
+			if (typeof createData === "string") {
+				setError(createData);
+				// setClicked(false);
+			} else {
+				setCheckoutUser({ ...checkoutUser, id: createData.id });
+				setUser(checkoutUser);
+				setCookie("session", createData.session);
+				methods.reset();
+				setIsGuest(false);
+				setGuestCreated(true);
+			}
+		},
+		(data) => {
+			console.log(data);
+		}
+	);
 
 	if (!isMounted) {
 		return <Loader />;
@@ -123,11 +173,16 @@ export default function Checkout() {
 					</li>
 				))}
 			</ul>
-			{stepIndex != 3 ? <OrderSummary cartProducts={cartProducts} /> : null}
-			{isGuest ? (
+			{stepIndex != 3 && cartProducts != null ? (
+				<OrderSummary cartProducts={cartProducts} />
+			) : null}
+			{isGuest && stepIndex != 3 ? (
 				<section className='p-4 w-full bg-white rounded-lg shadow shadow-olive-500 '>
 					<p className=''>
-						<Link href={{ pathname: "/login", query: { from: "checkout" } }}>
+						<Link
+							href={{ pathname: "/login", query: { from: "checkout" } }}
+							className='hover:underline text-lg text-green'
+						>
 							Login
 						</Link>{" "}
 						for a faster checkout experience, or you can continue as a guest. You will
@@ -139,9 +194,8 @@ export default function Checkout() {
 				{stepIndex === 0 ? (
 					<section className='p-4 w-full card'>
 						<ShippingForm
-							isGuest={isGuest}
-							user={isGuest ? guest : user}
-							setUser={isGuest ? setGuest : setUser}
+							user={checkoutUser}
+							setUser={setCheckoutUser}
 							buttonText={"Next"}
 							required={true}
 							extraFunction={() => {
@@ -154,9 +208,8 @@ export default function Checkout() {
 				{stepIndex === 1 ? (
 					<section className='p-4 w-full card'>
 						<PaymentForm
-							isGuest={isGuest}
-							user={isGuest ? guest : user}
-							setUser={isGuest ? setGuest : setUser}
+							user={checkoutUser}
+							setUser={setCheckoutUser}
 							setPaymentInfo={setPaymentInfo}
 							paymentInfo={paymentInfo}
 							extraFunction={() => {
@@ -179,10 +232,10 @@ export default function Checkout() {
 								</button>
 							</h3>
 							<p className='text-lg'>
-								{user.shipping_name_first} {user.shipping_name_last}
+								{checkoutUser.shipping_name_first} {checkoutUser.shipping_name_last}
 							</p>
-							<p className='text-lg'>{user.email}</p>
-							<p className='text-lg'>{user.shipping_phone}</p>
+							<p className='text-lg'>{checkoutUser.email}</p>
+							<p className='text-lg'>{checkoutUser.shipping_phone}</p>
 						</div>
 						<div aria-hidden={true} className='h-[2px] my-4 bg-olive/50'></div>
 						<div className='flex flex-col'>
@@ -196,12 +249,12 @@ export default function Checkout() {
 								</button>
 							</h3>
 							<p className='text-lg'>
-								{user.shipping_name_first} {user.shipping_name_last}
+								{checkoutUser.shipping_name_first} {checkoutUser.shipping_name_last}
 							</p>
-							<p className='text-lg'>{user.shipping_address}</p>
+							<p className='text-lg'>{checkoutUser.shipping_address}</p>
 							<p className='text-lg'>
-								{user.shipping_city} , {user.shipping_province} ,{" "}
-								{user.shipping_postal_code}
+								{checkoutUser.shipping_city} , {checkoutUser.shipping_province} ,{" "}
+								{checkoutUser.shipping_postal_code}
 							</p>
 						</div>
 						<div aria-hidden={true} className='h-[2px] my-4 bg-olive/50'></div>
@@ -221,19 +274,19 @@ export default function Checkout() {
 							</p>
 							<p className='text-lg'>Expiry Date: {paymentInfo.expiry_date} </p>
 							<p className='text-lg'>CVV: {paymentInfo.cvv} </p>
-							{user.same_as == 0 ? (
+							{checkoutUser.same_as == 0 ? (
 								<div className='flex flex-col'>
 									<h3 className='text-2xl text-green-800 font-semibold'>
 										{" "}
 										Billing Address
 									</h3>
 									<p className='text-lg'>
-										{user.billing_name_first} {user.billing_name_last}
+										{checkoutUser.billing_name_first} {checkoutUser.billing_name_last}
 									</p>
-									<p className='text-lg'>{user.billing_address}</p>
+									<p className='text-lg'>{checkoutUser.billing_address}</p>
 									<p className='text-lg'>
-										{user.billing_city} , {user.billing_province} ,{" "}
-										{user.billing_postal_code}
+										{checkoutUser.billing_city} , {checkoutUser.billing_province} ,{" "}
+										{checkoutUser.billing_postal_code}
 									</p>
 								</div>
 							) : (
@@ -254,13 +307,15 @@ export default function Checkout() {
 				) : null}
 				{stepIndex === 3 ? (
 					<section className='p-4  card flex flex-col items-center w-full gap-2 '>
-						{/* <h3 className='text-xl text-green-800 font-semibold text-center mb-2'>
-							Order Complete!
-						</h3> */}
 						<p className='text-xl text-green-800 font-semibold'>
 							Thank you for your purchase! You will receive an email with your order
 							details.
 						</p>
+						{guestCreated ? (
+							<>
+								<p>Your account has been created.</p>
+							</>
+						) : null}
 						{isGuest ? (
 							//create account
 							<>
@@ -268,19 +323,40 @@ export default function Checkout() {
 									You can create an account to save your information for future
 									purchases.
 								</p>
-								<Button
-									className='w-full shadow'
-									press={"pressed"}
-									onClick={() => {
-										router.push(`/create?from=checkout?invoice=${invoice.id}`);
-									}}
-								>
-									Home
-								</Button>
+								<FormProvider {...methods}>
+									<form
+										className='flex flex-col'
+										autoComplete='off'
+										onSubmit={(e) => e.preventDefault()}
+										noValidate
+									>
+										<InputWithLabel
+											validation={password_validation}
+											label='Password'
+											id='password'
+											type='text'
+											isRequired={true}
+											placeholder='Password'
+										/>
+										<Button
+											className='shadow w-full my-2'
+											press={"pressed"}
+											variant='greenDark'
+											type='submit'
+											onClick={createAccountSubmit}
+										>
+											Create Account
+										</Button>
+									</form>
+								</FormProvider>
+								<div
+									aria-hidden={true}
+									className='h-[2px] my-4 bg-olive/50  mx-2 w-full'
+								></div>
 							</>
 						) : null}
 
-						{invoice != null ? <Receipt invoice={invoice} user={user} /> : null}
+						{invoice != null ? <Receipt invoice={invoice} /> : null}
 						<Button
 							className='w-full shadow'
 							press={"pressed"}
@@ -356,16 +432,17 @@ const OrderSummary = ({ cartProducts }) => {
 	);
 };
 
-const Receipt = ({ invoice, user }) => {
+const Receipt = ({ invoice }) => {
 	return (
 		<>
 			<p className='mb-2'>
 				<strong>Invoice ID: </strong>
-				{invoice.invoice_id}
+				{invoice.transaction_id}
 			</p>
 			<p>
 				<strong>Order Date: </strong>
-				{invoice.date}
+				{/* {invoice.date} */}
+				{dateFormatter(invoice.date)}
 			</p>
 
 			<div
@@ -377,22 +454,23 @@ const Receipt = ({ invoice, user }) => {
 				<div>
 					<h3 className='text-2xl text-green-800 font-semibold'>Shipped To:</h3>
 					<p className='text-lg'>
-						{user.shipping_name_first} {user.shipping_name_last}
+						{invoice.user.shipping_name_first} {invoice.user.shipping_name_last}
 					</p>
-					<p className='text-lg'>{user.shipping_address}</p>
+					<p className='text-lg'>{invoice.user.shipping_address}</p>
 					<p className='text-lg'>
-						{user.shipping_city} , {user.shipping_province} ,{" "}
-						{user.shipping_postal_code}
+						{invoice.user.shipping_city} , {invoice.user.shipping_province} ,{" "}
+						{invoice.user.shipping_postal_code}
 					</p>
 				</div>
 				<div>
 					<h3 className='text-2xl text-green-800 font-semibold'>Billed To:</h3>
 					<p className='text-lg'>
-						{user.billing_name_first} {user.billing_name_last}
+						{invoice.user.billing_name_first} {invoice.user.billing_name_last}
 					</p>
-					<p className='text-lg'>{user.billing_address}</p>
+					<p className='text-lg'>{invoice.user.billing_address}</p>
 					<p className='text-lg'>
-						{user.billing_city} , {user.billing_province} , {user.billing_postal_code}
+						{invoice.user.billing_city} , {invoice.user.billing_province} ,{" "}
+						{invoice.user.billing_postal_code}
 					</p>
 				</div>
 			</section>
