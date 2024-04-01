@@ -38,10 +38,11 @@ const Login = () => {
 	const [chooseCartActive, setChooseCartActive] = useState(false);
 
 	const setCookie = async (session) => {
+		console.log("setting cookie", session);
 		Cookies.set("session", session, {
 			expires: 60 * 60 * 24 * 7,
 			path: "/",
-			httpOnly: true,
+			httpOnly: false,
 		});
 	};
 
