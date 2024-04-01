@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { getSessionCookie } from "@/lib/classes/cookies";
 import DepartmentsList from "@/components/departmentsList";
 import { getRandomProducts } from "@/lib/classes/product";
 import ProductCard from "@/components/products/productCard";
@@ -13,14 +12,11 @@ import {
 } from "@/components/ui/carousel";
 import Hero from "@/components/hero";
 import { Suspense } from "react";
-import { getSession } from "@/lib/classes/user";
 import Link from "next/link";
 import Loading from "@/components/loader";
 import { fetchData } from "@/lib/db";
 
 export default async function Home() {
-	// console.log(productsPHP);
-
 	const productsData = await fetchData(getRandomProducts, 4);
 
 	return (
