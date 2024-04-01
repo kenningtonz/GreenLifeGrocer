@@ -40,7 +40,7 @@ const Login = () => {
 	const setCookie = async (session) => {
 		console.log("setting cookie", session);
 		Cookies.set("session", session, {
-			expires: 60 * 60 * 24 * 7,
+			maxAge: 60 * 60 * 24 * 7,
 			path: "/",
 			httpOnly: false,
 		});

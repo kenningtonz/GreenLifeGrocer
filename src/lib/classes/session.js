@@ -7,16 +7,18 @@ export async function getSession() {
 	const session_id = cookies().get("session")?.value;
 	console.log(session_id);
 	const data = session_id
-		? await fetch(`${db}/get_session.php`, dbBody({ session_id: session_id }))
-				.then((res) => res.json())
-				.then((ress) => console.log("data", ress))
+		? await fetch(
+				`${db}/get_session.php`,
+				dbBody({ session_id: session_id })
+		  ).then((res) => res.json())
 		: null;
 	if (data != null && data.error.id === "0") {
 		//extend session
 		console.log("data", data);
 		return data;
+	} else {
+		return null;
 	}
-	return null;
 }
 
 export async function logoutAccount() {

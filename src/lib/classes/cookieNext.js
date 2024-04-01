@@ -5,9 +5,9 @@ import Cookies from "js-cookie";
 export async function setCookie(name, value) {
 	const setNextCookie = () => {
 		Cookies.set(name, value, {
-			expires: 60 * 60 * 24,
+			maxAge: 60 * 60 * 24,
 			path: "/",
-			httpOnly: true,
+			httpOnly: false,
 		});
 		console.log(name, "cookie set");
 	};
