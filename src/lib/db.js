@@ -1,6 +1,4 @@
 export const db = "https://db.kennedyadams.ca/greenlife";
-// export const db =
-// 	"https://dca.durhamcollege.ca/~adamskennedy/easy_groceries/greenlife";
 
 export const dbBody = (body) => {
 	return {
@@ -8,13 +6,11 @@ export const dbBody = (body) => {
 		headers: {
 			accept: "application/json",
 			"Content-Type": "application/json",
-
-			// Authorization: "Basic " + btoa("adamskennedy:JLpfre[76"),
 		},
 		body: JSON.stringify({
 			...body,
 			dbUSER: process.env.dbUSER,
-			dbPASS: "Kmma68062",
+			dbPASS: process.env.dbPASS,
 		}),
 	};
 };

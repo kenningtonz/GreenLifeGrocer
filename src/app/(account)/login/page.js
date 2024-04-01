@@ -51,7 +51,7 @@ const Login = () => {
 			setError(loginData);
 		} else {
 			setUser(loginData.user);
-			setCookie(loginData.user.session);
+			setCookie(loginData.session);
 			if (loginData.user.cart != "" && Object.keys(cart).length > 0) {
 				setChooseCartActive(true);
 			} else {
