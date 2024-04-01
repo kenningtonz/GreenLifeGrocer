@@ -16,11 +16,12 @@ import { Suspense } from "react";
 import { getSession } from "@/lib/classes/user";
 import Link from "next/link";
 import Loading from "@/components/loader";
+import { fetchData } from "@/lib/db";
 
 export default async function Home() {
-	const productsPHP = await getRandomProducts(4);
-	const { products, error } = productsPHP;
 	// console.log(productsPHP);
+
+	const productsData = await fetchData(getRandomProducts, 4);
 
 	return (
 		<main className='py-8 flex flex-col justify-between items-center'>
@@ -95,26 +96,22 @@ export default async function Home() {
 				</Carousel>
 			</section>
 
-			<section
-				className={` p-4 mt-12 mb-8 w-full bg-olive/50 flex flex-col items-center`}
-			>
-				<h2 className='text-3xl text-center text-green-900'>Featured Products</h2>
-				<div className='mt-2 flex gap-4 sm:flex-nowrap flex-wrap p-4 justify-center max-w-5xl'>
-					{error.id === "0" ? (
-						<>
-							{products.map((product) => {
-								return (
-									<ProductCard
-										key={product.upc}
-										product={product}
-										className='max-w-64'
-									/>
-								);
-							})}
-						</>
-					) : null}
-				</div>
-			</section>
+			{typeof productsData === "string" ? (
+				<p>{productsData}</p>
+			) : (
+				<section
+					className={` p-4 mt-12 mb-8 w-full bg-olive/50 flex flex-col items-center`}
+				>
+					<h2 className='text-3xl text-center text-green-900'>Featured Products</h2>
+					<div className='mt-2 flex gap-4 sm:flex-nowrap flex-wrap p-4 justify-center max-w-5xl'>
+						{productsData.products.map((product) => {
+							return (
+								<ProductCard key={product.upc} product={product} className='max-w-64' />
+							);
+						})}
+					</div>
+				</section>
+			)}
 			<Suspense fallback={<Loading />}>
 				<DepartmentsList />
 			</Suspense>

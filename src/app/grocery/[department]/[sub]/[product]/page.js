@@ -6,17 +6,16 @@ import Breadcrumbs from "@/components/breadcrumbs";
 import Rating from "@/components/rating";
 import ProductsCarousel from "@/components/products/productsCarousel";
 import { Suspense } from "react";
+import { fetchData } from "@/lib/db";
 
 import { db } from "@/lib/db";
 
 import Image from "next/image";
 async function Product({ params }) {
 	const url = params.product;
+	const productData = await fetchData(getProduct, url);
 
-	const product = await getProduct(url);
-	console.log(product);
-
-	if (product.error.id != "0") {
+	if (typeof productData === "string") {
 		return (
 			<main className='bg-white p-8'>
 				<section className=' rounded-2xl shadow-md bg-olive-200 shadow-olive-600/50 p-4 '>
@@ -29,6 +28,7 @@ async function Product({ params }) {
 			</main>
 		);
 	}
+
 	const {
 		upc,
 		id,
@@ -44,9 +44,14 @@ async function Product({ params }) {
 		family_url,
 		family_id,
 		category_id,
-	} = product.products[0];
+	} = productData.products[0];
 
-	const similarProducts = await getProducts(category_id, family_id);
+	const similarProductsData = await fetchData(
+		getProducts,
+		category_id,
+		family_id
+	);
+
 	// console.log(product);
 
 	// console.log(similarProducts);
@@ -92,16 +97,18 @@ async function Product({ params }) {
 				<p className='text-base'>{product_description}</p>
 			</section>
 
-			<section className='child100 mt-8 '>
-				<h2 className='text-2xl text-green-900'>Similar Products</h2>
-				<Suspense fallback='loading...'>
-					<ProductsCarousel
-						products={similarProducts.products.filter(
-							(product) => product.upc != upc
-						)}
-					/>
-				</Suspense>
-			</section>
+			{typeof productData != "string" ? (
+				<section className='child100 mt-8 '>
+					<h2 className='text-2xl text-green-900'>Similar Products</h2>
+					<Suspense fallback='loading...'>
+						<ProductsCarousel
+							products={similarProductsData.products.filter(
+								(product) => product.upc != upc
+							)}
+						/>
+					</Suspense>
+				</section>
+			) : null}
 		</main>
 	);
 }

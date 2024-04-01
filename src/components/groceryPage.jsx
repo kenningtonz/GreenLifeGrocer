@@ -5,23 +5,28 @@ import Breadcrumbs from "@/components/breadcrumbs";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import SortSelect from "@/components/sortSelect";
-import Search from "@/components/search";
+import { fetchData } from "@/lib/db";
 import { Suspense } from "react";
 import { getCategories, getFamilies } from "@/lib/classes/category";
+import Loading from "@/components/loader";
+
+import Error from "@/components/error";
 
 export default async function GroceryPage({ departmentURL, subDepartmentURL }) {
-	const departmentsPHP = await getCategories();
-	const { categories: departments, error: departmentE } = departmentsPHP;
-	console.log(departments);
+	const departmentsData = await fetchData(getCategories);
 
-	if (departmentE.id !== "0") {
+	if (typeof departmentsData === "string") {
 		return (
-			<section className='bg-white p-8'>
-				<h1 className='text-2xl text-center'>Departments Not Found</h1>
-				<p className='text-center'>Sorry, we could not find the departments</p>
-			</section>
+			<main className='mainGreenCenter'>
+				<Error error={departmentsData}>
+					<Link href='/' className='underline'>
+						Back to Home
+					</Link>
+				</Error>
+			</main>
 		);
 	}
+	const departments = departmentsData.categories;
 
 	const activeDepartment = departments.find(
 		(department) => department.url === departmentURL
@@ -30,38 +35,42 @@ export default async function GroceryPage({ departmentURL, subDepartmentURL }) {
 	if (activeDepartment === undefined) {
 		return (
 			<main className='mainGreenCenter'>
-				<section className=' rounded-lg bg-white shadow-sm p-4 '>
-					<h1 className=''>Department Not Found</h1>
-					<p>Sorry, we could not find the department you are looking for</p>
+				<Error error={"Department Not Found"}>
 					<Link href='/grocery' className='underline'>
 						Back to Departments
 					</Link>
-				</section>
+				</Error>
 			</main>
 		);
 	}
 
-	const subDepartmentsPHP =
-		activeDepartment != undefined ? await getFamilies(activeDepartment.id) : null;
+	const subDepartmentsData =
+		activeDepartment != undefined
+			? await fetchData(getFamilies, activeDepartment.id)
+			: null;
 
-	const { families: subDepartments, error: subDepartmentE } =
-		subDepartmentsPHP != null
-			? subDepartmentsPHP
-			: { categories: null, error: { id: "1" } };
+	if (typeof subDepartmentsData === "string") {
+		return (
+			<Error error={subDepartmentsData}>
+				<Link href={`/grocery`} className='underline'>
+					Back to Departments
+				</Link>
+			</Error>
+		);
+	}
 
-	console.log(subDepartmentsPHP);
+	const subDepartments = subDepartmentsData.families ?? null;
 
 	const activeSubDepartment =
 		subDepartments != null
 			? subDepartments.find((sub) => sub.url === subDepartmentURL)
 			: null;
 
-	const products =
+	const productsData =
 		activeSubDepartment != undefined
-			? await getProducts(activeDepartment.id, activeSubDepartment.id)
-			: await getProducts(activeDepartment.id);
+			? await fetchData(getProducts, activeDepartment.id, activeSubDepartment.id)
+			: await fetchData(getProducts, activeDepartment.id);
 
-	//TODO: if subdepartment is not found
 	return (
 		<main className='bg-olive-50'>
 			<DepartmentButtons
@@ -76,10 +85,10 @@ export default async function GroceryPage({ departmentURL, subDepartmentURL }) {
 				currentURL={`/grocery/${activeDepartment.url}`}
 			/>
 
-			<section className='flex spaceBetween p1 '>
+			<section className='flex flex-wrap justify-between p-8 gap-4 '>
 				<Breadcrumbs
 					sameSize={false}
-					className={"child50 p-8 "}
+					className={"child50  "}
 					paths={
 						activeSubDepartment != undefined
 							? [
@@ -94,13 +103,11 @@ export default async function GroceryPage({ departmentURL, subDepartmentURL }) {
 					}
 				/>
 
-				<section className='p-6 flex flex-col gap-4 items-end'>
-					<SortSelect />
-				</section>
+				<SortSelect />
 			</section>
-			{activeDepartment != undefined ? (
-				<Suspense fallback='loading...'>
-					<ProductsPaged products={products.products} />
+			{activeDepartment != undefined && typeof productsData != "string" ? (
+				<Suspense fallback={<Loading />}>
+					<ProductsPaged products={productsData.products} />
 				</Suspense>
 			) : null}
 		</main>

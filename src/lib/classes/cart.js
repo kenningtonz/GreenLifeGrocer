@@ -6,7 +6,7 @@ export async function getProductsByCart(cartArray) {
 		dbBody({
 			cart: cartArray,
 		})
-	).then((res) => res.json());
+	);
 }
 
 export async function setUserCart(cart, user_id) {
@@ -17,16 +17,15 @@ export async function setUserCart(cart, user_id) {
 			cart: cart,
 			user_id: user_id,
 		})
-	).then((res) => res.json());
+	);
 }
 
-export async function completePurchase(cart, user_id) {
-	console.log("completePurchase", cart, user_id);
+export async function completePurchase(cart, user) {
 	return fetch(
 		`${db}/complete_purchase.php`,
 		dbBody({
 			cart: cart,
-			user_id: user_id,
+			user: user,
 		})
-	).then((res) => res.json());
+	);
 }

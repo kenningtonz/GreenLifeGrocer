@@ -3,9 +3,10 @@ import { Button, ButtonIcon } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useCartContext } from "@/lib/context/cart";
 import { useUserContext } from "@/lib/context/user";
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, CirclePlus, CircleX } from "lucide-react";
 import { setCookie } from "@/lib/classes/cookieNext";
 import { setUserCart } from "@/lib/classes/cart";
+import { fetchData } from "@/lib/db";
 
 export const AddToCartButton = ({ id, name, quantity, isIcon, className }) => {
 	const [user, setUser] = useUserContext();
@@ -21,8 +22,7 @@ export const AddToCartButton = ({ id, name, quantity, isIcon, className }) => {
 		console.log(cart);
 		setCart({ ...cart });
 		if (Object.keys(user).length > 0) {
-			console.log("usercart");
-			setUserCart(JSON.stringify(cart), user.id).then((res) => {
+			fetchData(setUserCart, JSON.stringify(cart), user.id).then((res) => {
 				console.log(res);
 			});
 		}
@@ -33,7 +33,10 @@ export const AddToCartButton = ({ id, name, quantity, isIcon, className }) => {
 		<>
 			{isIcon ? (
 				<ButtonIcon
-					icon='add'
+					rotate={true}
+					Icon={CirclePlus}
+					color='green'
+					name='Add to Cart'
 					onClick={(e) => {
 						e.preventDefault();
 						addToCart();
@@ -74,14 +77,18 @@ export const RemoveFromCartButton = ({ id, name }) => {
 		setCart({ ...cart });
 		setCookie("cart", JSON.stringify(cart));
 		if (Object.keys(user).length > 0) {
-			setUserCart(JSON.stringify(cart), user.id).then((res) => {
+			fetchData(setUserCart, JSON.stringify(cart), user.id).then((res) => {
 				console.log(res);
 			});
 		}
 	};
 	return (
 		<ButtonIcon
-			icon='remove'
+			Icon={CircleX}
+			rotate={true}
+			size={24}
+			color='pink'
+			name='Remove from Cart'
 			onClick={(e) => {
 				e.preventDefault();
 				removeFromCart(id);
@@ -101,7 +108,6 @@ export function QuantityCartButton({ className, id }) {
 
 	// console.log(product);
 	const addToCart = (quantity) => {
-		console.log(quantity);
 		if (Object.keys(cart).includes(id)) {
 			cart[id] += quantity;
 		} else {
@@ -110,40 +116,42 @@ export function QuantityCartButton({ className, id }) {
 		setCart({ ...cart });
 
 		if (Object.keys(user).length > 0) {
-			setUserCart(cart, user.id).then((res) => {
+			fetchData(setUserCart, JSON.stringify(cart), user.id).then((res) => {
 				console.log(res);
 			});
 		}
 		setCookie("cart", JSON.stringify(cart));
-		console.log(cart);
 	};
 
 	return (
-		<div className={`justify-end flex gap-1 px-4 items-center ${className}`}>
-			<Button
-				variant='ghost'
-				disabled={cart[id] === 1}
-				size='icon'
+		<div className={`flex items-center ${className}`}>
+			<ButtonIcon
+				Icon={Minus}
+				color='pink'
+				rotate={false}
+				filled={false}
+				size={24}
+				disabled={cart[id] == 1}
 				onClick={(e) => {
 					e.preventDefault();
 					addToCart(cart[id] - 1 < 1 ? 0 : -1);
 				}}
-			>
-				<Minus className='h-6 w-6' />
-			</Button>
-			<p className='rounded-md text-2xl text-center bg-white h-8 w-8 text-green-900'>
+			/>
+
+			<p className='rounded-md text-xl text-center bg-white h-8 pt-0.5 w-7 text-green-900'>
 				{cart[id]}
 			</p>
-			<Button
-				variant='ghost'
-				size='icon'
+			<ButtonIcon
+				Icon={Plus}
+				color='green'
+				rotate={false}
+				size={24}
+				filled={false}
 				onClick={(e) => {
 					e.preventDefault();
 					addToCart(1);
 				}}
-			>
-				<Plus className='h-6 w-6' />
-			</Button>
+			/>
 		</div>
 	);
 }

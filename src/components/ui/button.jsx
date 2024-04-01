@@ -68,38 +68,38 @@ const Button = React.forwardRef(
 Button.displayName = "Button";
 
 const ButtonIcon = React.forwardRef(
-	({ className, size = 32, icon = "add", ...props }, ref) => {
+	(
+		{ className, color, size = 32, rotate, name, filled = true, Icon, ...props },
+		ref
+	) => {
 		return (
 			<button
-				title={icon}
-				aria-label={icon}
-				className={`${className} cursor-pointer outline-none w-min h-min `}
+				title={name}
+				aria-label={name}
+				className={`${className} cursor-pointer outline-none w-min h-min disabled:pointer-events-none disabled:opacity-50  `}
 				ref={ref}
 				{...props}
 			>
-				<svg
-					xmlns='http://www.w3.org/2000/svg'
-					width={size}
-					height={size}
-					viewBox='0 0 24 24'
-					className='hover:rotate-90  stroke-pink-400 fill-none hover:fill-pink-800 group-active:stroke-purple-200 active:fill-pink-600 active:duration-0 duration-300'
-				>
-					<path
-						d='M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z'
-						strokeWidth='1.5'
-					></path>
-					{icon === "add" ? (
-						<>
-							<path d='M12 8V16' strokeWidth='1.5'></path>
-							<path d='M8 12H16' strokeWidth='1.5'></path>
-						</>
-					) : icon === "remove" ? (
-						<>
-							<path d='M 14.8 9.2 L 9.2 14.8' strokeWidth='1.5'></path>
-							<path d='M 9.2 9.2 L 14.8 14.8' strokeWidth='1.5'></path>
-						</>
-					) : null}
-				</svg>
+				<Icon
+					size={size}
+					className={`${
+						color == "green" && filled
+							? "stroke-green-400 hover:fill-green-800 group-active:stroke-green-200 active:fill-green-600"
+							: ""
+					} ${
+						color == "pink" && filled
+							? "stroke-pink-400 hover:fill-pink-800 group-active:stroke-purple-200 active:fill-pink-600"
+							: ""
+					} ${
+						rotate ? "hover:rotate-90  " : ""
+					}  fill-none active:duration-0 duration-300  ${
+						!filled && color == "green"
+							? "stroke-green-400 hover:stroke-green-800"
+							: ""
+					}  ${
+						!filled && color == "pink" ? "stroke-pink-400 hover:stroke-pink-800" : ""
+					}`}
+				/>
 			</button>
 		);
 	}
@@ -107,3 +107,29 @@ const ButtonIcon = React.forwardRef(
 ButtonIcon.displayName = "ButtonIcon";
 
 export { Button, buttonVariants, ButtonIcon };
+
+{
+	/* <svg
+xmlns='http://www.w3.org/2000/svg'
+width={size}
+height={size}
+viewBox='0 0 24 24'
+className='hover:rotate-90  stroke-pink-400 fill-none hover:fill-pink-800 group-active:stroke-purple-200 active:fill-pink-600 active:duration-0 duration-300'
+>
+<path
+	d='M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z'
+	strokeWidth='1.5'
+></path>
+{icon === "add" ? (
+	<>
+		<path d='M12 8V16' strokeWidth='1.5'></path>
+		<path d='M8 12H16' strokeWidth='1.5'></path>
+	</>
+) : icon === "remove" ? (
+	<>
+		<path d='M 14.8 9.2 L 9.2 14.8' strokeWidth='1.5'></path>
+		<path d='M 9.2 9.2 L 14.8 14.8' strokeWidth='1.5'></path>
+	</>
+) : null}
+</svg> */
+}

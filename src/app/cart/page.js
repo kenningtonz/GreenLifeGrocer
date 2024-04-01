@@ -9,29 +9,21 @@ import {
 	QuantityCartButton,
 } from "@/components/cartButtons";
 import { useState, useEffect } from "react";
-import { db } from "@/lib/db";
+import { db, fetchData } from "@/lib/db";
 import { useCartContext } from "@/lib/context/cart";
-import { useUserContext } from "@/lib/context/user";
 
 export default function Cart() {
 	const [cart, setCart] = useCartContext();
-	const [user, setUser] = useUserContext();
 	const [cartProducts, setCartProducts] = useState([]);
 
-	// console.log("user", user != {});
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const result = await getProductsByCart(cart);
-				setCartProducts(result.products);
-				console.log(result);
-			} catch (error) {
-				console.error("Error fetching data:", error);
+		fetchData(getProductsByCart, cart).then((data) => {
+			if (typeof data === "string") {
+				console.log(data);
+			} else {
+				setCartProducts(data.products);
 			}
-		};
-		if (Object.keys(cart).length > 0) {
-			fetchData();
-		}
+		});
 	}, [cart]);
 
 	if (Object.keys(cart).length === 0) {
@@ -66,9 +58,9 @@ export default function Cart() {
 	const total = Math.round((subTotal + tax + Number.EPSILON) * 100) / 100;
 
 	return (
-		<main className='sm:px-8 py-8 px-4  mainGreenCenter flex-col gap-4 '>
+		<main className='sm:px-8 py-8 px-4  mainGreen flex-col gap-4 justify-start '>
 			<h1 className='text-2xl text-green-900 font-bold text-center'>Your Cart</h1>
-			<table className='w-full border-collapse table-auto shadow shadow-olive-500 rounded-t-lg'>
+			<table className='w-full border-collapse table-auto shadow shadow-olive-500 rounded-t-lg hidden sm:table'>
 				<thead className='text-center font-bold text-lg bg-olive/80'>
 					<tr className=''>
 						<th className='p-2 rounded-tl-lg text-left'>Product</th>
@@ -118,7 +110,40 @@ export default function Cart() {
 				</tbody>
 			</table>
 
-			<section className='flex flex-col gap-1 self-end w-1/3'>
+			<ul className='sm:hidden flex flex-col gap-2'>
+				{cartProducts.map((product, index) => {
+					const upc = product.upc;
+					return (
+						<li
+							className='grid grid-cols-4 w-full bg-white border-b-2 border-olive p-2 rounded-lg gap-2 items-center'
+							key={`${product.product_name}-cart-${index}`}
+						>
+							<Image
+								src={`${db}/images/product/${upc.slice(0, 4)}/${upc}.jpg`}
+								alt={product.product_name}
+								width={80}
+								height={80}
+								className='rounded-lg w-auto col-span-1'
+							/>
+
+							<Link
+								className='px-2 hover:underline decoration-green decoration-2 col-span-2'
+								href={`/grocery/${product.category_url}/${product.family_url}/${product.url}`}
+							>
+								<p className='text-lg'>{product.product_name}</p>
+								<p className='italic'>{product.brand}</p>
+								<p className='pt-1 font-bold'>${product.avg_price}</p>
+							</Link>
+							<div className='flex flex-col items-end col-span-1 justify-between h-full'>
+								<RemoveFromCartButton id={product.id} name={product.product_name} />
+								<QuantityCartButton className={"max-w-48"} id={product.id} />
+							</div>
+						</li>
+					);
+				})}
+			</ul>
+
+			<section className='flex flex-col gap-1 self-end w-full sm:w-1/3'>
 				<span className='flex justify-between'>
 					<p className='text-lg text-green-900/80 '>Subtotal:</p>
 					<p className='text-lg text-green-900/80 '>${subTotal}</p>
@@ -131,15 +156,12 @@ export default function Cart() {
 					<p className='text-xl font-bold text-green-900'>Total:</p>
 					<p className='text-xl font-bold text-green-900'>${total}</p>
 				</span>
-				{Object.keys(user).length > 0 ? (
-					<Link href='/cart/checkout'>
-						<Button className='shadow w-full'>Checkout</Button>
-					</Link>
-				) : (
-					<Link href={{ pathname: "/login", query: { from: "cart" } }}>
-						<Button className='shadow w-full'>Login to Checkout</Button>
-					</Link>
-				)}
+
+				<Link href='/cart/checkout'>
+					<Button variant={"greenDark"} press={"pressed"} className='shadow w-full'>
+						Checkout
+					</Button>
+				</Link>
 			</section>
 		</main>
 	);

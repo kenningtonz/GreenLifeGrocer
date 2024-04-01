@@ -11,6 +11,10 @@ const nextConfig = {
 			},
 		],
 	},
+	env: {
+		dbUSER: process.env.dbUSER,
+		dbPASS: process.env.dbPASS,
+	},
 };
 
 export default nextConfig;

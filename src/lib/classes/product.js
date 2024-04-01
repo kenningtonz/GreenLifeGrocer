@@ -38,7 +38,7 @@ export async function getRandomProducts(num, category = null, family = null) {
 			family_id: family,
 			limit: num,
 		})
-	).then((res) => res.json());
+	);
 }
 
 export async function getProducts(category, family = null) {
@@ -48,7 +48,7 @@ export async function getProducts(category, family = null) {
 			category_id: category,
 			family_id: family,
 		})
-	).then((res) => res.json());
+	);
 }
 
 export async function getProduct(url) {
@@ -57,5 +57,5 @@ export async function getProduct(url) {
 		dbBody({
 			url: url,
 		})
-	).then((res) => res.json());
+	);
 }

@@ -1,34 +1,34 @@
 import { db, dbBody } from "@/lib/db";
 
-// export async function createAccount(email, password, name_last, name_first) {
-// 	return fetch(
-// 		`${db}/create_account.php`,
-// 		dbBody({
-// 			email: email,
-// 			password: password,
-// 			name_last: name_last,
-// 			name_first: name_first,
-// 		})
-// 	).then((res) => res.json());
-// }
-
 export async function createAccount(email, password, name_last, name_first) {
-	return fetch(`https://db.kennedyadams.ca/greenlife/create_account.php`, {
-		method: "POST",
-		headers: {
-			accept: "application/json",
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify({
+	return fetch(
+		`${db}/create_account.php`,
+		dbBody({
 			email: email,
 			password: password,
 			name_last: name_last,
 			name_first: name_first,
-			dbUSER: "hvgum487_kennedyG",
-			dbPASS: "Kmma68062",
-		}),
-	}).then((res) => res.json());
+		})
+	);
 }
+
+// export async function createAccount(email, password, name_last, name_first) {
+// 	return fetch(`https://db.kennedyadams.ca/greenlife/create_account.php`, {
+// 		method: "POST",
+// 		headers: {
+// 			accept: "application/json",
+// 			"Content-Type": "application/json",
+// 		},
+// 		body: JSON.stringify({
+// 			email: email,
+// 			password: password,
+// 			name_last: name_last,
+// 			name_first: name_first,
+// 			dbUSER: "hvgum487_kennedyG",
+// 			dbPASS: "Kmma68062",
+// 		}),
+// 	}).then((res) => res.json());
+// }
 
 export async function deleteAccount(email, password) {
 	return fetch(
@@ -37,7 +37,7 @@ export async function deleteAccount(email, password) {
 			email: email,
 			password: password,
 		})
-	).then((res) => res.json());
+	);
 }
 
 export async function loginAccount(email, password) {
@@ -47,7 +47,7 @@ export async function loginAccount(email, password) {
 			email: email,
 			password: password,
 		})
-	).then((res) => res.json());
+	);
 }
 
 export async function resetPassword(id, code, password) {
@@ -58,7 +58,7 @@ export async function resetPassword(id, code, password) {
 			code: code,
 			password: password,
 		})
-	).then((res) => res.json());
+	);
 }
 
 export async function getUser(user_id) {
@@ -67,7 +67,7 @@ export async function getUser(user_id) {
 		dbBody({
 			user_id: user_id,
 		})
-	).then((res) => res.json());
+	);
 }
 
 export async function sendResetPasswordEmail(email) {
@@ -76,7 +76,7 @@ export async function sendResetPasswordEmail(email) {
 		dbBody({
 			email: email,
 		})
-	).then((res) => res.json());
+	);
 }
 
 export async function updateUser(user) {
@@ -85,5 +85,31 @@ export async function updateUser(user) {
 		dbBody({
 			user: user,
 		})
-	).then((res) => res.json());
+	);
+}
+
+export async function getInvoices(user_id) {
+	return fetch(
+		`${db}/get_invoices.php`,
+		dbBody({
+			user_id: user_id,
+		})
+	);
+}
+
+export async function getInvoice(code) {
+	return fetch(
+		`${db}/get_invoice.php`,
+		dbBody({
+			code: code,
+		})
+	);
+}
+export async function checkEmail(email) {
+	return fetch(
+		`${db}/check_email.php`,
+		dbBody({
+			email: email,
+		})
+	);
 }

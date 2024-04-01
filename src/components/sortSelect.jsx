@@ -25,12 +25,12 @@ const SortSelect = () => {
 
 	return (
 		<Select
-			className='w-[180px] '
+			className='min-w-[180px] max-w-[300px] w-full'
 			onValueChange={(value) =>
 				router.push(pathname + "?" + createQueryString("sort", value))
 			}
 		>
-			<SelectTrigger className='w-[180px]'>
+			<SelectTrigger className='min-w-[180px] max-w-[300px] w-full'>
 				<SelectValue placeholder='Sort By' />
 			</SelectTrigger>
 			<SelectContent>

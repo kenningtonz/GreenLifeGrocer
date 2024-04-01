@@ -5,52 +5,77 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Loader from "@/components/loader";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import { getProductsByCart, completePurchase } from "@/lib/classes/cart";
 import { useRouter } from "next/navigation";
-import { updateUser } from "@/lib/classes/user";
+
+import { fetchData } from "@/lib/db";
+import ShippingForm from "@/components/forms/shippingForm";
+import PaymentForm from "@/components/forms/paymentForm";
+
+import { useForm } from "react-hook-form";
 
 export default function Checkout() {
+	const isBrowser = () => typeof window !== "undefined"; //The approach recommended by Next.js
+
+	function scrollToTop() {
+		if (!isBrowser()) return;
+		window.scrollTo({ top: 0, behavior: "smooth" });
+	}
+
 	const [isMounted, setIsMounted] = useState(false);
 	const [user, setUser] = useUserContext();
 	const [stepIndex, setStepIndex] = useState(0);
 	const [cart, setCart] = useCartContext();
 	const [cartProducts, setCartProducts] = useState([]);
+	const [guest, setGuest] = useState({ id: -1 });
+	const [isGuest, setIsGuest] = useState(false);
+	const [error, setError] = useState("");
 	const router = useRouter();
-	const [paymentInfo, setPaymentInfo] = useState();
+	const [paymentInfo, setPaymentInfo] = useState({
+		card_number: null,
+		expiry_date: null,
+		cvv: null,
+	});
 	const [invoice, setInvoice] = useState();
+	const [completed, setCompleted] = useState(false);
 
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const result = await getProductsByCart(cart);
-				setCartProducts(result.products);
-				console.log(result);
-			} catch (error) {
-				console.error("Error fetching data:", error);
-			}
-		};
-		if (Object.keys(user).length === 0) {
-			console.log("user is null");
+		if (Object.keys(cart).length === 0 && stepIndex != 3) {
 			router.push("/cart");
-		} else {
-			fetchData();
 		}
+		if (Object.keys(user).length === 0) {
+			setIsGuest(true);
+		}
+		fetchData(getProductsByCart, cart).then((data) => {
+			if (typeof data === "string") {
+				console.log(data);
+			} else {
+				setCartProducts(data.products);
+			}
+		});
+
 		setIsMounted(true);
-	}, []);
+	}, [cart]);
 
 	const complete = async (e) => {
 		e.preventDefault();
-		console.log("complete");
-		const result = await completePurchase(cart, user.id);
-		if (result.error.id == 0) {
+		setCompleted(true);
+		// console.log("complete");
+		// console.log(user);
+		const completeData = await fetchData(
+			completePurchase,
+			cart,
+			isGuest ? guest : user
+		);
+		if (typeof completeData === "string") {
+			setError(completeData);
+		} else {
 			setCart({});
-			setInvoice(result);
+			setInvoice(completeData);
 			setStepIndex(3);
 		}
-		console.log(result);
+
+		console.log(completeData);
 	};
 
 	const steps = ["Shipping", "Payment", "Review", "Complete"];
@@ -59,25 +84,33 @@ export default function Checkout() {
 		return <Loader />;
 	}
 	return (
-		<main className='flex-col p-4 mainGreenCenter gap-4'>
-			<Link href='/cart' className=' self-start'>
-				<Button variant='default' className='shadow' press={"pressed"}>
-					Back to Cart
-				</Button>
-			</Link>
-			<h1 className='text-3xl text-center child100'>Checkout</h1>
-			<ul className='flex gap-8 child100 justify-center mb-4 '>
+		<main className='flex-col p-4 mainGreen pb-8 gap-4 scroll-smooth'>
+			{stepIndex === 3 ? null : (
+				<Link href='/cart' className=' self-start'>
+					<Button variant='default' className='shadow' press={"pressed"}>
+						Back to Cart
+					</Button>
+				</Link>
+			)}
+			<h1 className='text-3xl text-center '>
+				{stepIndex === 3
+					? "Order Complete!"
+					: isGuest
+					? "Guest Checkout"
+					: "Checkout"}
+			</h1>
+			<ul className='flex gap-8 justify-center mb-4 '>
 				{steps.map((step, index) => (
 					<li className='relative flex flex-col items-center' key={index}>
 						<div
 							aria-hidden={true}
 							data-active={stepIndex == index}
-							className='h-5 w-5 rounded-full data-[active=false]:bg-pink-100 data-[active=true]:bg-pink z-20'
+							className='h-5 w-5 rounded-full data-[active=false]:bg-green-200 data-[active=true]:bg-green z-20'
 						></div>
 						{index != steps.length - 1 ? (
 							<div
 								aria-hidden={true}
-								className=' absolute left-1/2 top-[9px] w-24 h-[2px] bg-pink-900 z-10'
+								className=' absolute left-1/2 top-[9px] w-24 h-[2px] bg-green-800 z-10'
 							></div>
 						) : null}
 						<p
@@ -91,84 +124,174 @@ export default function Checkout() {
 				))}
 			</ul>
 			{stepIndex != 3 ? <OrderSummary cartProducts={cartProducts} /> : null}
-
-			<section className='p-4 w-full bg-white rounded-lg shadow shadow-olive-500 '>
+			{isGuest ? (
+				<section className='p-4 w-full bg-white rounded-lg shadow shadow-olive-500 '>
+					<p className=''>
+						<Link href={{ pathname: "/login", query: { from: "checkout" } }}>
+							Login
+						</Link>{" "}
+						for a faster checkout experience, or you can continue as a guest. You will
+						have the option to create an account after your purchase.
+					</p>
+				</section>
+			) : null}
+			<>
 				{stepIndex === 0 ? (
-					<>
+					<section className='p-4 w-full card'>
 						<ShippingForm
-							user={user}
-							setUser={setUser}
-							nextStep={() => setStepIndex(1)}
+							isGuest={isGuest}
+							user={isGuest ? guest : user}
+							setUser={isGuest ? setGuest : setUser}
+							buttonText={"Next"}
+							required={true}
+							extraFunction={() => {
+								scrollToTop();
+								setStepIndex(1);
+							}}
 						/>
-					</>
+					</section>
 				) : null}
 				{stepIndex === 1 ? (
-					<>
+					<section className='p-4 w-full card'>
 						<PaymentForm
-							user={user}
-							setUser={setUser}
+							isGuest={isGuest}
+							user={isGuest ? guest : user}
+							setUser={isGuest ? setGuest : setUser}
 							setPaymentInfo={setPaymentInfo}
-							nextStep={() => setStepIndex(2)}
+							paymentInfo={paymentInfo}
+							extraFunction={() => {
+								scrollToTop();
+								setStepIndex(2);
+							}}
 						/>
-					</>
+					</section>
 				) : null}
 				{stepIndex === 2 ? (
-					<>
-						<div className='mb-4'>
-							<h3 className='text-xl text-green-800 font-semibold'>Personal Info</h3>
-							<p className=''>
+					<section className='p-4 w-full card'>
+						<div className='flex flex-col'>
+							<h3 className='text-2xl text-green-800 font-semibold mb-2'>
+								Personal Info{" "}
+								<button
+									className='hover:underline text-sm pl-2 text-green'
+									onClick={() => setStepIndex(0)}
+								>
+									Edit
+								</button>
+							</h3>
+							<p className='text-lg'>
 								{user.shipping_name_first} {user.shipping_name_last}
 							</p>
-							<p>{user.email}</p>
-							<p>{user.shipping_phone}</p>
+							<p className='text-lg'>{user.email}</p>
+							<p className='text-lg'>{user.shipping_phone}</p>
 						</div>
-
-						<div className='mb-4'>
-							<h3 className='text-xl text-green-800 font-semibold'>Shipping</h3>
-							<p>
+						<div aria-hidden={true} className='h-[2px] my-4 bg-olive/50'></div>
+						<div className='flex flex-col'>
+							<h3 className='text-2xl text-green-800 font-semibold'>
+								Shipping{" "}
+								<button
+									className='hover:underline text-sm pl-2 text-green'
+									onClick={() => setStepIndex(0)}
+								>
+									Edit
+								</button>
+							</h3>
+							<p className='text-lg'>
 								{user.shipping_name_first} {user.shipping_name_last}
 							</p>
-							<p>{user.shipping_address}</p>
-							<p>
+							<p className='text-lg'>{user.shipping_address}</p>
+							<p className='text-lg'>
 								{user.shipping_city} , {user.shipping_province} ,{" "}
 								{user.shipping_postal_code}
 							</p>
 						</div>
-						<div className='mb-4'>
-							<h3 className='text-xl text-green-800 font-semibold'>Payment Info</h3>
-							<p>
+						<div aria-hidden={true} className='h-[2px] my-4 bg-olive/50'></div>
+						<div className='flex flex-col'>
+							<h3 className='text-2xl text-green-800 font-semibold'>
+								Payment Info{" "}
+								<button
+									className='hover:underline text-sm pl-2 text-green'
+									onClick={() => setStepIndex(1)}
+								>
+									Edit
+								</button>
+							</h3>
+							<p className='text-lg'>
 								Card Number: **** **** ****{" "}
 								{paymentInfo.card_number.substr(paymentInfo.card_number.length - 4)}
 							</p>
-							<p>Expiry Date: {paymentInfo.expiry_date} </p>
-							<p>CVV: {paymentInfo.cvv} </p>
+							<p className='text-lg'>Expiry Date: {paymentInfo.expiry_date} </p>
+							<p className='text-lg'>CVV: {paymentInfo.cvv} </p>
+							{user.same_as == 0 ? (
+								<div className='flex flex-col'>
+									<h3 className='text-2xl text-green-800 font-semibold'>
+										{" "}
+										Billing Address
+									</h3>
+									<p className='text-lg'>
+										{user.billing_name_first} {user.billing_name_last}
+									</p>
+									<p className='text-lg'>{user.billing_address}</p>
+									<p className='text-lg'>
+										{user.billing_city} , {user.billing_province} ,{" "}
+										{user.billing_postal_code}
+									</p>
+								</div>
+							) : (
+								<p>Billing address same as shipping.</p>
+							)}
 						</div>
+						<p className='text-sm text-red-800 text-center'>{error}</p>
 						<Button
-							className='w-full shadow'
+							className='w-full shadow mt-4'
 							press={"pressed"}
+							variant={"greenDark"}
+							disabled={completed}
 							onClick={(e) => complete(e)}
 						>
 							Complete Purchase
 						</Button>
-					</>
+					</section>
 				) : null}
 				{stepIndex === 3 ? (
-					<>
-						<h3 className='text-xl text-green-800 font-semibold text-center mb-2'>
+					<section className='p-4  card flex flex-col items-center w-full gap-2 '>
+						{/* <h3 className='text-xl text-green-800 font-semibold text-center mb-2'>
 							Order Complete!
-						</h3>
+						</h3> */}
+						<p className='text-xl text-green-800 font-semibold'>
+							Thank you for your purchase! You will receive an email with your order
+							details.
+						</p>
+						{isGuest ? (
+							//create account
+							<>
+								<p>
+									You can create an account to save your information for future
+									purchases.
+								</p>
+								<Button
+									className='w-full shadow'
+									press={"pressed"}
+									onClick={() => {
+										router.push(`/create?from=checkout?invoice=${invoice.id}`);
+									}}
+								>
+									Home
+								</Button>
+							</>
+						) : null}
 
 						{invoice != null ? <Receipt invoice={invoice} user={user} /> : null}
 						<Button
 							className='w-full shadow'
 							press={"pressed"}
+							variant={"greenDark"}
 							onClick={() => router.push("/")}
 						>
 							Home
 						</Button>
-					</>
+					</section>
 				) : null}
-			</section>
+			</>
 		</main>
 	);
 }
@@ -236,54 +359,74 @@ const OrderSummary = ({ cartProducts }) => {
 const Receipt = ({ invoice, user }) => {
 	return (
 		<>
-			<section className='flex gap-4 justify-between px-4'>
+			<p className='mb-2'>
+				<strong>Invoice ID: </strong>
+				{invoice.invoice_id}
+			</p>
+			<p>
+				<strong>Order Date: </strong>
+				{invoice.date}
+			</p>
+
+			<div
+				aria-hidden={true}
+				className='h-[2px] my-4 bg-olive/50  mx-2 w-full'
+			></div>
+
+			<section className='flex gap-4 justify-around px-4 w-full'>
 				<div>
-					<p>Invoice ID: {invoice.invoice_id}</p>
-					<p>Order Date: {invoice.date}</p>
-				</div>
-				<div>
-					<h3 className='text-xl text-green-800 font-semibold'>Billed To:</h3>
-					<p>
-						{user.billing_name_first} {user.billing_name_last}
-					</p>
-					<p>{user.billing_address}</p>
-					<p>
-						{user.billing_city} , {user.billing_province} , {user.billing_postal_code}
-					</p>
-				</div>
-				<div>
-					<h3 className='text-xl text-green-800 font-semibold'>Shipped To:</h3>
-					<p>
+					<h3 className='text-2xl text-green-800 font-semibold'>Shipped To:</h3>
+					<p className='text-lg'>
 						{user.shipping_name_first} {user.shipping_name_last}
 					</p>
-					<p>{user.shipping_address}</p>
-					<p>
+					<p className='text-lg'>{user.shipping_address}</p>
+					<p className='text-lg'>
 						{user.shipping_city} , {user.shipping_province} ,{" "}
 						{user.shipping_postal_code}
 					</p>
 				</div>
+				<div>
+					<h3 className='text-2xl text-green-800 font-semibold'>Billed To:</h3>
+					<p className='text-lg'>
+						{user.billing_name_first} {user.billing_name_last}
+					</p>
+					<p className='text-lg'>{user.billing_address}</p>
+					<p className='text-lg'>
+						{user.billing_city} , {user.billing_province} , {user.billing_postal_code}
+					</p>
+				</div>
 			</section>
+			<div
+				aria-hidden={true}
+				className='h-[2px] my-4 bg-olive/50 w-full mx-2'
+			></div>
+
 			<table className='w-full'>
-				<thead>
+				<thead className='text-green-900 font-bold text-left text-lg '>
 					<tr>
-						<th>Product</th>
-						<th>Quantity</th>
-						<th>Price</th>
-						<th>Total</th>
+						<th className='p-2'>Product</th>
+						<th className='p-2'>Quantity</th>
+						<th className='p-2'>Price</th>
+						<th className='p-2'>Taxed</th>
 					</tr>
 				</thead>
 				<tbody>
 					{invoice.products.map((product, index) => (
-						<tr key={`${product.product_name}-${index}`}>
-							<td>{product.product_name}</td>
-							<td>{product.quantity}</td>
-							<td>${product.avg_price}</td>
-							<td>${product.avg_price * product.quantity}</td>
+						<tr className='p-2 ' key={`${product.product_name}-${index}`}>
+							<td className='p-2'>{product.product_name}</td>
+							<td className='p-2'>{product.quantity}</td>
+							<td className='p-2'>${product.avg_price * product.quantity}</td>
+							<td className='p-2'>{product.taxable == 0 ? "Y" : "N"}</td>
 						</tr>
 					))}
 				</tbody>
 			</table>
-			<section className='flex flex-col gap-1 self-end w-1/3'>
+			<div
+				aria-hidden={true}
+				className='h-[1px] my-1 bg-olive/50 mx-2 w-full'
+			></div>
+
+			<section className='flex flex-col gap-1 max-w-sm mb-4 p-2 self-end w-full'>
 				<span className='flex justify-between'>
 					<p className='text-lg text-green-900/80 '>Subtotal:</p>
 					<p className='text-lg text-green-900/80 '>${invoice.sub_total}</p>
@@ -298,331 +441,5 @@ const Receipt = ({ invoice, user }) => {
 				</span>
 			</section>
 		</>
-	);
-};
-
-const PaymentForm = ({ user, setUser, nextStep, setPaymentInfo }) => {
-	const [sameAsShipping, setsameAsShipping] = useState(user.same_as != 0);
-	const [payment, setPayment] = useState({
-		card_number: null,
-		expiry_date: null,
-		cvv: null,
-	});
-
-	const [billing, setBilling] = useState({
-		billing_name_first: user.billing_name_first ?? null,
-		billing_name_last: user.billing_name_last ?? null,
-		billing_address: user.billing_address ?? null,
-		billing_city: user.billing_city ?? null,
-		billing_province: user.billing_province ?? null,
-		billing_postal_code: user.billing_postal_code ?? null,
-	});
-
-	const saveForm = (e) => {
-		e.preventDefault();
-		const form = e.target;
-		const card_number = form.card_number.value;
-		const expiry_date = form.expiry_date.value;
-		const cvv = form.cvv.value;
-		setPaymentInfo({ card_number, expiry_date, cvv });
-
-		if (sameAsShipping == 0) {
-			const billing_name_first = form.name_first.value;
-			const billing_name_last = form.name_last.value;
-			const billing_address = form.billing_address.value;
-			const billing_city = form.billing_city.value;
-			const billing_province = form.billing_province.value;
-			const billing_postal_code = form.billing_postal_code.value;
-			setUser({
-				...user,
-				same_as: sameAsShipping ? 1 : 0,
-				billing_name_first: billing_name_first,
-				billing_name_last: billing_name_last,
-				billing_address: billing_address,
-				billing_city: billing_city,
-				billing_province: billing_province,
-				billing_postal_code: billing_postal_code,
-			});
-			console.log(
-				billing_address,
-				billing_city,
-				billing_province,
-				billing_postal_code
-			);
-		} else {
-			setUser({
-				...user,
-				same_as: sameAsShipping ? 1 : 0,
-			});
-		}
-		console.log(card_number, expiry_date, cvv);
-		updateUser(user).then((res) => console.log(res));
-		nextStep();
-	};
-	console.log(sameAsShipping);
-
-	return (
-		<form onSubmit={saveForm} className='flex flex-col gap-4 '>
-			<fieldset className='flex flex-wrap gap-4'>
-				<legend className='text-xl text-green-800 font-semibold'>
-					Payment Info
-				</legend>
-				<div className='child100'>
-					<Label htmlFor='card_number'>Card Number</Label>
-					<Input
-						required
-						type='text'
-						id='card_number'
-						placeholder='Card Number'
-						defaultValue={payment.card_number ?? null}
-						onChange={(e) => setPayment({ ...payment, card_number: e.target.value })}
-					/>
-				</div>
-				<div className='child50'>
-					<Label htmlFor='expiry_date'>Expiry Date</Label>
-					<Input
-						required
-						type='text'
-						id='expiry_date'
-						placeholder='Expiry Date'
-						defaultValue={payment.expiry_date ?? null}
-						onChange={(e) => setPayment({ ...payment, expiry_date: e.target.value })}
-					/>
-				</div>
-				<div className='child50'>
-					<Label htmlFor='cvv'>CVV</Label>
-					<Input
-						required
-						type='text'
-						id='cvv'
-						placeholder='CVV'
-						defaultValue={payment.cvv ?? null}
-						onChange={(e) => setPayment({ ...payment, cvv: e.target.value })}
-					/>
-				</div>
-			</fieldset>
-			<div className='flex items-center gap-2'>
-				<Checkbox
-					id='shippingSame'
-					defaultValue={sameAsShipping}
-					label='billing address same as shipping'
-					onClick={() => setsameAsShipping(!sameAsShipping)}
-				/>
-				<Label htmlFor='shippingSame'>Billing Address same as Shipping</Label>
-			</div>
-			{!sameAsShipping ? (
-				<>
-					<fieldset className='flex flex-wrap gap-4'>
-						<legend className='text-xl text-green-800 font-semibold'>Billing</legend>
-						<div className='child50'>
-							<Label htmlFor='billing_name_first'>First Name</Label>
-							<Input
-								type='text'
-								required={sameAsShipping ? false : true}
-								id='billing_name_first'
-								placeholder='First Name'
-								defaultValue={billing.billing_name_first}
-								onChange={(e) =>
-									setBilling({ ...billing, billing_name_first: e.target.value })
-								}
-							/>
-						</div>
-						<div className='child50'>
-							<Label htmlFor='billing_name_last'>Last Name</Label>
-							<Input
-								required={sameAsShipping ? false : true}
-								type='text'
-								id='billing_name_last'
-								placeholder='Last Name'
-								defaultValue={billing.billing_name_last}
-								onChange={(e) =>
-									setBilling({ ...billing, billing_name_last: e.target.value })
-								}
-							/>
-						</div>
-						<div className='child100'>
-							<Label htmlFor='billing_address'>Address</Label>
-							<Input
-								type='text'
-								id='billing_address'
-								placeholder='Address'
-								defaultValue={billing.billing_address}
-								onChange={(e) =>
-									setBilling({ ...billing, billing_address: e.target.value })
-								}
-							/>
-						</div>
-						<div className='child50'>
-							<Label htmlFor='billing_city'>City</Label>
-							<Input
-								type='text'
-								required={sameAsShipping ? false : true}
-								id='billing_city'
-								placeholder='City'
-								defaultValue={billing.billing_city}
-								onChange={(e) =>
-									setBilling({ ...billing, billing_city: e.target.value })
-								}
-							/>
-						</div>
-						<div className='child50'>
-							<Label htmlFor='billing_province'>Province</Label>
-							<Input
-								type='text'
-								required={sameAsShipping ? false : true}
-								id='billing_province'
-								placeholder='Province'
-								defaultValue={billing.billing_province}
-								onChange={(e) =>
-									setBilling({ ...billing, billing_province: e.target.value })
-								}
-							/>
-						</div>
-						<div className='child50'>
-							<Label htmlFor='billing_postal_code'>Postal Code</Label>
-							<Input
-								type='text'
-								id='billing_postal_code'
-								required={sameAsShipping ? false : true}
-								placeholder='Postal Code'
-								defaultValue={billing.billing_postal_code}
-								onChange={(e) =>
-									setBilling({ ...billing, billing_postal_code: e.target.value })
-								}
-							/>
-						</div>
-					</fieldset>
-				</>
-			) : null}
-			<Button press={"pressed"} className='shadow' type='submit'>
-				Next Step
-			</Button>
-		</form>
-	);
-};
-
-const ShippingForm = ({ user, setUser, nextStep }) => {
-	const saveForm = (e) => {
-		e.preventDefault();
-		const form = e.target;
-		const name_first = form.name_first.value;
-		const name_last = form.name_last.value;
-		const phone = form.phone.value;
-		const shipping_address = form.shipping_address.value;
-		const shipping_city = form.shipping_city.value;
-		const shipping_province = form.shipping_province.value;
-		const shipping_postal_code = form.shipping_postal_code.value;
-		console.log(
-			name_first,
-			name_last,
-			shipping_address,
-			shipping_city,
-			shipping_province,
-			shipping_postal_code
-		);
-		setUser({
-			...user,
-			shipping_name_first: name_first,
-			shipping_name_last: name_last,
-			shipping_phone: phone,
-			shipping_address: shipping_address,
-			shipping_city: shipping_city,
-			shipping_province: shipping_province,
-			shipping_postal_code: shipping_postal_code,
-		});
-
-		nextStep();
-	};
-
-	return (
-		<form onSubmit={saveForm} className='flex flex-col gap-4 '>
-			<fieldset className='flex flex-wrap gap-4'>
-				<legend className='text-xl text-green-800 font-semibold'>
-					Personal Info
-				</legend>
-				<div className='child100'>
-					<Label htmlFor='email'>Email </Label>
-					<Input type='email' id='email' value={user.email} disabled />
-				</div>
-				<div className='child50'>
-					<Label htmlFor='name_first'>First Name</Label>
-					<Input
-						type='text'
-						required
-						id='name_first'
-						placeholder='First Name'
-						defaultValue={user.shipping_name_first}
-					/>
-				</div>
-				<div className='child50'>
-					<Label htmlFor='name_last'>Last Name</Label>
-					<Input
-						type='text'
-						id='name_last'
-						required
-						placeholder='Last Name'
-						defaultValue={user.shipping_name_first}
-					/>
-				</div>
-				<div className='child50'>
-					<Label htmlFor='phone'>Phone</Label>
-					<Input
-						type='tel'
-						required
-						id='phone'
-						placeholder='phone'
-						defaultValue={user.shipping_phone}
-					/>
-				</div>
-			</fieldset>
-			<fieldset className='flex flex-wrap gap-4'>
-				<legend className='text-xl text-green-800 font-semibold'>
-					Shipping Address
-				</legend>
-				<div className='child100'>
-					<Label htmlFor='shipping_address'>Address</Label>
-					<Input
-						type='text'
-						required
-						id='shipping_address'
-						placeholder='Address'
-						defaultValue={user.shipping_address}
-					/>
-				</div>
-				<div className='child50'>
-					<Label htmlFor='shipping_city'>City</Label>
-					<Input
-						type='text'
-						id='shipping_city'
-						required
-						placeholder='City'
-						defaultValue={user.shipping_city}
-					/>
-				</div>
-				<div className='child50'>
-					<Label htmlFor='shipping_province'>Province</Label>
-					<Input
-						type='text'
-						id='shipping_province'
-						required
-						placeholder='Province'
-						defaultValue={user.shipping_province}
-					/>
-				</div>
-				<div className='child50'>
-					<Label htmlFor='shipping_postal_code'>Postal Code</Label>
-					<Input
-						type='text'
-						id='shipping_postal_code'
-						placeholder='Postal Code'
-						required
-						defaultValue={user.shipping_postal_code}
-					/>
-				</div>
-			</fieldset>
-			<Button press={"pressed"} className='shadow' type='submit'>
-				Next Step
-			</Button>
-		</form>
 	);
 };

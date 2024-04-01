@@ -1,14 +1,10 @@
 "use client";
 import { useSearchParams, usePathname } from "next/navigation";
-import { getSearch } from "@/lib/classes/search";
 import {
 	Pagination,
 	PaginationContent,
-	PaginationEllipsis,
 	PaginationItem,
 	PaginationLink,
-	PaginationNext,
-	PaginationPrevious,
 } from "@/components/ui/pagination";
 import ProductCard from "@/components/products/productCard";
 

@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { getFamilies, getCategories } from "@/lib/classes/category";
+import { getCategories } from "@/lib/classes/category";
+import { fetchData } from "@/lib/db";
 import SearchBar from "@/components/search";
 import { UserRound, ShoppingCart } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
@@ -9,35 +10,25 @@ import { useRouter } from "next/navigation";
 import { useCartContext } from "@/lib/context/cart";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
-// import groceryStore from "@/lib/classes/store";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown";
 
 const Header = () => {
 	const [cart, setCart] = useCartContext();
 	const [groceryDropdown, setGroceryDropdown] = useState(false);
 	const [departments, setDepartments] = useState([]);
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const result = await getCategories();
-				setDepartments(result.categories);
-			} catch (error) {
-				console.error("Error fetching data:", error);
+		fetchData(getCategories).then((data) => {
+			if (typeof data === "string") {
+				console.log(data);
+			} else {
+				setDepartments(data.categories);
 			}
-		};
-		fetchData();
+		});
 	}, []);
 	const router = useRouter();
-	// const cart = groceryStore((state) => state.cart);
 	const { toast } = useToast();
 	return (
 		<header className='bg-green-900'>
-			<nav className=' flex sm:justify-between items-center px-4 py-2 text-white flex-wrap sm:gap-4 gap-2 justify-center'>
+			<nav className='m-auto flex sm:flex-row flex-col sm:justify-between items-center px-4 py-2 text-white flex-wrap sm:gap-4 gap-2 justify-center max-w-[1200px]'>
 				<Link href='/' className='flex gap-4 items-center '>
 					<Image
 						src='/images/logo.png'
@@ -48,41 +39,52 @@ const Header = () => {
 					/>
 					<p className='text-2xl fontSpecial'>GreenLife Grocer</p>
 				</Link>
-				<SearchBar />
+				<SearchBar className={"order-3 sm:order-2"} />
 
-				<ul className='flex items-center gap-4 py-2'>
-					<li>
-						<DropdownMenu open={groceryDropdown}>
-							<DropdownMenuTrigger
-								className='flex items-center cursor-pointer z-20'
+				<ul className='flex items-center gap-4 py-2 order-2 sm:order-3'>
+					{departments.length > 0 ? (
+						<li className='relative '>
+							<p
+								className='flex items-center cursor-pointer z-50'
 								onMouseEnter={() => setGroceryDropdown(true)}
 							>
-								Grocery
+								Grocery{" "}
 								<ChevronDown
 									size={24}
 									className={`transition-transform ${
 										groceryDropdown ? "rotate-180" : ""
 									}`}
 								/>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent
-								onMouseLeave={() => setGroceryDropdown(false)}
-								className='font-normal bg-green-900 -mt-2 pt-2 z-10'
-							>
-								{departments.map((department, index) => {
-									return (
-										<DropdownMenuItem
-											key={`${department.name}-${index}-header`}
-											className={"text-white hover:underline"}
-										>
-											<Link href={`/grocery/${department.url}`}>{department.name}</Link>
-										</DropdownMenuItem>
-									);
-								})}
-							</DropdownMenuContent>
-						</DropdownMenu>
-					</li>
-					<li>
+							</p>
+							{groceryDropdown ? (
+								<div
+									className='absolute top-8 left-0 w-full bg-green-900 min-w-[160px] p-2 rounded-b-lg z-50'
+									onMouseLeave={() => setGroceryDropdown(false)}
+								>
+									<ul>
+										{departments.map((department, index) => {
+											return (
+												<li
+													key={`${department.name}-${index}-header`}
+													className={"text-white hover:underline p-1"}
+												>
+													<Link href={`/grocery/${department.url}`}>{department.name}</Link>
+												</li>
+											);
+										})}
+									</ul>
+								</div>
+							) : null}
+
+							{/* <DropdownMenu open={groceryDropdown}>
+								<DropdownMenuContent
+									onMouseLeave={() => setGroceryDropdown(false)}
+									className='font-normal bg-green-900 -mt-2 pt-2 z-10'
+								></DropdownMenuContent>
+							</DropdownMenu> */}
+						</li>
+					) : null}
+					<li className='z-50'>
 						<Link href='/account'>
 							<UserRound
 								size={24}
@@ -92,7 +94,7 @@ const Header = () => {
 						</Link>
 					</li>
 
-					<li>
+					<li className='z-50'>
 						<ShoppingCart
 							onClick={() =>
 								Object.keys(cart).length > 0

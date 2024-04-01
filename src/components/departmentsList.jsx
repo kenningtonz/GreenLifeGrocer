@@ -1,18 +1,15 @@
-import { getFamilies, getCategories } from "@/lib/classes/category";
+import { getCategories } from "@/lib/classes/category";
 import Link from "next/link";
+import { fetchData } from "@/lib/db";
 import Image from "next/image";
 async function DepartmentsList() {
-	const departmentsPHP = await getCategories().catch((error) => {
-		console.log("Error", error);
-	});
-	const { categories: departments, error } = departmentsPHP;
-	// console.log(departmentsPHP);
-	// const families = await getFamilies("Bakery");
-	if (error.id !== "0") {
+	const departmentsData = await fetchData(getCategories);
+
+	if (typeof departmentsData === "string") {
 		return (
 			<section className=' p-8'>
 				<h1 className='text-2xl text-center'>Departments Not Found</h1>
-				<p className='text-center'>Sorry, we could not find the departments</p>
+				<p className='text-center'>{departmentsData}</p>
 			</section>
 		);
 	}
@@ -23,7 +20,7 @@ async function DepartmentsList() {
 				Shop by Department
 			</h2>
 			<ul className='flex gap-4 flex-wrap p-2 mb-12 justify-center'>
-				{departments.map((department) => {
+				{departmentsData.categories.map((department) => {
 					return (
 						<li key={department.name}>
 							<Link

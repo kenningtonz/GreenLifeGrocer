@@ -17,7 +17,7 @@ export async function getSearch(search) {
 		dbBody({
 			search: search,
 		})
-	).then((res) => res.json());
+	);
 }
 
 export async function getSearchHints(search) {
@@ -26,5 +26,5 @@ export async function getSearchHints(search) {
 		dbBody({
 			search: search,
 		})
-	).then((res) => res.json());
+	);
 }

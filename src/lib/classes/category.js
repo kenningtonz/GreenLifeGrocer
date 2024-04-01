@@ -1,9 +1,7 @@
 import { db, dbBody } from "@/lib/db";
 
 export async function getCategories() {
-	return fetch(`${db}/get_categories.php`, dbBody({}))
-		.then((res) => res.json())
-		.catch((error) => console.error("Error fetching data:", error));
+	return fetch(`${db}/get_categories.php`, dbBody({}));
 }
 
 export async function getFamilies(category) {
@@ -12,7 +10,7 @@ export async function getFamilies(category) {
 		dbBody({
 			category_id: category,
 		})
-	).then((res) => res.json());
+	);
 }
 
 // export async function getCategories() {
