@@ -27,7 +27,9 @@ const Invoices = async ({ params }) => {
 
 	return (
 		<main className='mainGreen px-4 py-8 '>
-			<Invoice invoice={invoiceData.invoice} />
+			<section className=' card  flex flex-col w-full gap-2 h-fit m-auto max-w-[1200px]'>
+				<Invoice invoice={invoiceData.invoice} />
+			</section>
 		</main>
 	);
 };

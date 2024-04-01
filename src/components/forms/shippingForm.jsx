@@ -66,9 +66,8 @@ const ShippingForm = ({
 							validation={email_validation}
 							label='Email'
 							id='email'
-							isRequired={true}
+							isRequired={user.id == -1}
 							type='text'
-							placeholder='email'
 							disabled={user.id != -1}
 							defaultValue={user.email}
 						/>
@@ -80,7 +79,6 @@ const ShippingForm = ({
 							id='name_first'
 							isRequired={true}
 							type='text'
-							placeholder='First Name'
 							defaultValue={user.shipping_name_first}
 						/>
 					</div>
@@ -91,7 +89,6 @@ const ShippingForm = ({
 							isRequired={true}
 							id='name_last'
 							type='text'
-							placeholder='Last Name'
 							defaultValue={user.shipping_name_last}
 						/>
 					</div>
@@ -102,7 +99,6 @@ const ShippingForm = ({
 							isRequired={required}
 							id='phone'
 							type='tel'
-							placeholder='Phone'
 							defaultValue={user.shipping_phone}
 						/>
 					</div>
@@ -118,7 +114,6 @@ const ShippingForm = ({
 							id='shipping_address'
 							type='text'
 							isRequired={required}
-							placeholder='Address'
 							defaultValue={user.shipping_address}
 						/>
 					</div>
@@ -129,7 +124,6 @@ const ShippingForm = ({
 							id='shipping_city'
 							type='text'
 							isRequired={required}
-							placeholder='City'
 							defaultValue={user.shipping_city}
 						/>
 					</div>
@@ -140,7 +134,6 @@ const ShippingForm = ({
 							id='shipping_province'
 							isRequired={required}
 							type='text'
-							placeholder='Province'
 							defaultValue={user.shipping_province}
 						/>
 					</div>
@@ -151,7 +144,6 @@ const ShippingForm = ({
 							id='shipping_postal_code'
 							type='text'
 							isRequired={required}
-							placeholder='Postal Code'
 							defaultValue={user.shipping_postal_code}
 						/>
 					</div>

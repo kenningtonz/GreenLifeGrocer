@@ -102,7 +102,7 @@ p {
 }
 
 .mainGreen {
-	@apply bg-olive-50 flex  min-h-[90dvh];
+	@apply bg-olive-50 flex p-4 md:min-h-[90dvh];
 }
 .mainGreenCenter {
 	@apply mainGreen justify-center items-center;

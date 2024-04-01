@@ -12,14 +12,16 @@ import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 const PaymentForm = ({
-	isGuest,
 	user,
 	setUser,
 	extraFunction,
 	setPaymentInfo,
 	paymentInfo,
 }) => {
-	const methods = useForm({ shouldUnregister: true });
+	const methods = useForm({
+		shouldUnregister: true,
+		defaultValues: { shipping_same: user.same_as == 0 ? false : true },
+	});
 	const watchSameAsShipping = methods.watch("shipping_same");
 
 	useEffect(() => {
@@ -39,18 +41,17 @@ const PaymentForm = ({
 			methods.unregister("billing_province");
 			methods.unregister("billing_postal_code");
 		}
+		console.log("watchSameAsShipping", watchSameAsShipping);
 	}, [watchSameAsShipping]);
 
 	const onSubmit = methods.handleSubmit(
 		(data) => {
-			console.log(data);
-			setUser({
-				...user,
-				same_as: watchSameAsShipping ? 1 : 0,
-			});
-			if (watchSameAsShipping == 0) {
+			console.log(watchSameAsShipping);
+
+			if (!watchSameAsShipping) {
 				setUser({
 					...user,
+					same_as: 0,
 					billing_name_first: data.billing_name_first,
 					billing_name_last: data.billing_name_last,
 					billing_address: data.billing_address,
@@ -61,6 +62,7 @@ const PaymentForm = ({
 			} else {
 				setUser({
 					...user,
+					same_as: 1,
 					billing_name_first: user.shipping_name_first,
 					billing_name_last: user.shipping_name_last,
 					billing_address: user.shipping_address,
@@ -80,7 +82,7 @@ const PaymentForm = ({
 			}
 		},
 		(errors) => {
-			console.log(errors);
+			console.log(watchSameAsShipping);
 		}
 	);
 
@@ -132,7 +134,6 @@ const PaymentForm = ({
 					<InputCheckbox
 						label='Billing Address same as Shipping'
 						id='shipping_same'
-						defaultValue={user.same_as != 0}
 					/>
 				</fieldset>
 

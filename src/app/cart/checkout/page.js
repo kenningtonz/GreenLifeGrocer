@@ -12,7 +12,7 @@ import { password_validation } from "@/lib/utils/inputValidations";
 import { fetchData } from "@/lib/db";
 import ShippingForm from "@/components/forms/shippingForm";
 import PaymentForm from "@/components/forms/paymentForm";
-
+import Invoice from "@/components/invoice";
 import { FormProvider, useForm } from "react-hook-form";
 import { createAccountGuest } from "@/lib/classes/user";
 import { setCookie, deleteCookie } from "@/lib/classes/cookieNext";
@@ -117,8 +117,8 @@ export default function Checkout() {
 				setError(createData);
 				// setClicked(false);
 			} else {
-				setCheckoutUser({ ...checkoutUser, id: createData.id });
-				setUser(checkoutUser);
+				// setCheckoutUser({ ...checkoutUser, id: createData.id });
+				setUser({ ...checkoutUser, id: createData.id });
 				setCookie("session", createData.session);
 				methods.reset();
 				setIsGuest(false);
@@ -149,7 +149,7 @@ export default function Checkout() {
 					? "Guest Checkout"
 					: "Checkout"}
 			</h1>
-			<ul className='flex gap-8 justify-center mb-4 '>
+			<ul className='flex sm:gap-8 gap-4 justify-center mb-4 '>
 				{steps.map((step, index) => (
 					<li className='relative flex flex-col items-center' key={index}>
 						<div
@@ -160,11 +160,11 @@ export default function Checkout() {
 						{index != steps.length - 1 ? (
 							<div
 								aria-hidden={true}
-								className=' absolute left-1/2 top-[9px] w-24 h-[2px] bg-green-800 z-10'
+								className=' absolute left-1/2 top-[9px] sm:w-24 w-20 h-[2px] bg-green-800 z-10'
 							></div>
 						) : null}
 						<p
-							className={`mt-4 text-lg ${
+							className={`mt-4 text-base sm:text-lg ${
 								stepIndex == index ? "text-green-900 font-semibold" : "text-green-800 "
 							}`}
 						>
@@ -277,7 +277,6 @@ export default function Checkout() {
 							{checkoutUser.same_as == 0 ? (
 								<div className='flex flex-col'>
 									<h3 className='text-2xl text-green-800 font-semibold'>
-										{" "}
 										Billing Address
 									</h3>
 									<p className='text-lg'>
@@ -356,7 +355,7 @@ export default function Checkout() {
 							</>
 						) : null}
 
-						{invoice != null ? <Receipt invoice={invoice} /> : null}
+						{invoice != null ? <Invoice invoice={invoice.invoice} /> : null}
 						<Button
 							className='w-full shadow'
 							press={"pressed"}
@@ -429,95 +428,5 @@ const OrderSummary = ({ cartProducts }) => {
 				</span>
 			</div>
 		</section>
-	);
-};
-
-const Receipt = ({ invoice }) => {
-	return (
-		<>
-			<p className='mb-2'>
-				<strong>Invoice ID: </strong>
-				{invoice.transaction_id}
-			</p>
-			<p>
-				<strong>Order Date: </strong>
-				{/* {invoice.date} */}
-				{dateFormatter(invoice.date)}
-			</p>
-
-			<div
-				aria-hidden={true}
-				className='h-[2px] my-4 bg-olive/50  mx-2 w-full'
-			></div>
-
-			<section className='flex gap-4 justify-around px-4 w-full'>
-				<div>
-					<h3 className='text-2xl text-green-800 font-semibold'>Shipped To:</h3>
-					<p className='text-lg'>
-						{invoice.user.shipping_name_first} {invoice.user.shipping_name_last}
-					</p>
-					<p className='text-lg'>{invoice.user.shipping_address}</p>
-					<p className='text-lg'>
-						{invoice.user.shipping_city} , {invoice.user.shipping_province} ,{" "}
-						{invoice.user.shipping_postal_code}
-					</p>
-				</div>
-				<div>
-					<h3 className='text-2xl text-green-800 font-semibold'>Billed To:</h3>
-					<p className='text-lg'>
-						{invoice.user.billing_name_first} {invoice.user.billing_name_last}
-					</p>
-					<p className='text-lg'>{invoice.user.billing_address}</p>
-					<p className='text-lg'>
-						{invoice.user.billing_city} , {invoice.user.billing_province} ,{" "}
-						{invoice.user.billing_postal_code}
-					</p>
-				</div>
-			</section>
-			<div
-				aria-hidden={true}
-				className='h-[2px] my-4 bg-olive/50 w-full mx-2'
-			></div>
-
-			<table className='w-full'>
-				<thead className='text-green-900 font-bold text-left text-lg '>
-					<tr>
-						<th className='p-2'>Product</th>
-						<th className='p-2'>Quantity</th>
-						<th className='p-2'>Price</th>
-						<th className='p-2'>Taxed</th>
-					</tr>
-				</thead>
-				<tbody>
-					{invoice.products.map((product, index) => (
-						<tr className='p-2 ' key={`${product.product_name}-${index}`}>
-							<td className='p-2'>{product.product_name}</td>
-							<td className='p-2'>{product.quantity}</td>
-							<td className='p-2'>${product.avg_price * product.quantity}</td>
-							<td className='p-2'>{product.taxable == 0 ? "Y" : "N"}</td>
-						</tr>
-					))}
-				</tbody>
-			</table>
-			<div
-				aria-hidden={true}
-				className='h-[1px] my-1 bg-olive/50 mx-2 w-full'
-			></div>
-
-			<section className='flex flex-col gap-1 max-w-sm mb-4 p-2 self-end w-full'>
-				<span className='flex justify-between'>
-					<p className='text-lg text-green-900/80 '>Subtotal:</p>
-					<p className='text-lg text-green-900/80 '>${invoice.sub_total}</p>
-				</span>
-				<span className='flex justify-between'>
-					<p className='text-lg text-green-900/80 '>Tax:</p>
-					<p className='text-lg text-green-900/80 '>${invoice.tax}</p>
-				</span>
-				<span className='flex justify-between'>
-					<p className='text-xl font-bold text-green-900'>Total:</p>
-					<p className='text-xl font-bold text-green-900'>${invoice.total}</p>
-				</span>
-			</section>
-		</>
 	);
 };

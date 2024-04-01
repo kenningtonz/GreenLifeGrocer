@@ -49,17 +49,15 @@ const ResetPassword = () => {
 							validation={password_validation}
 							label='Password'
 							id='password'
-							type='text'
+							type='password'
 							isRequired={true}
-							placeholder='Password'
 						/>
 						<InputWithLabel
 							validation={password_validation}
 							label='Confirm Password'
 							id='confirm_password'
-							type='text'
+							type='password'
 							isRequired={true}
-							placeholder='Confirm Password'
 						/>
 						{isReset ? (
 							<>

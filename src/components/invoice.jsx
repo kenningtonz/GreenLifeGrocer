@@ -1,7 +1,7 @@
 import { dateFormatter } from "@/lib/utils/dateFormatter";
 const Invoice = ({ invoice }) => {
 	return (
-		<section className=' card  flex flex-col w-full gap-2 h-fit m-auto max-w-[1200px]'>
+		<>
 			<div className='w-full p-2 '>
 				<strong className='text-green-800 text-2xl'>Invoice ID: </strong>
 				<p className='mb-2 text-xl break-words '>{invoice.code}</p>
@@ -91,7 +91,7 @@ const Invoice = ({ invoice }) => {
 					<p className='text-xl font-bold text-green-900'>${invoice.total}</p>
 				</span>
 			</section>
-		</section>
+		</>
 	);
 };
 

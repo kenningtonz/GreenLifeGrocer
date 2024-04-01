@@ -14,8 +14,7 @@ function PurchaseHistory({ invoiceData }) {
 	}
 	return (
 		<section className=''>
-			{/* <p className='text-green-900'>Purchase History</p> */}
-			<ul className='w-full'>
+			<ul className='w-full space-y-4'>
 				{invoiceData.invoices.map((invoice, index) => {
 					return (
 						<li
