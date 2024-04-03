@@ -96,11 +96,13 @@ export default function Cart() {
 										<p className='italic'>{product.brand}</p>
 									</Link>
 								</td>
-								<td className='p-2'>{product.avg_price}</td>
+								<td className='p-2'>${product.avg_price}</td>
 								<td className='p-2'>
 									<QuantityCartButton className={"max-w-48"} id={product.id} />
 								</td>
-								<td className='p-2'>{product.avg_price * product.quantity}</td>
+								<td className='p-2'>
+									${(product.avg_price * product.quantity).toFixed(2)}
+								</td>
 								<td className='p-2'>{product.taxable ? "Y" : "N"}</td>
 								<td className='p-2'>
 									<RemoveFromCartButton id={product.id} name={product.product_name} />

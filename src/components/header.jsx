@@ -9,10 +9,11 @@ import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { useCartContext } from "@/lib/context/cart";
 import { ChevronDown } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const Header = () => {
 	const [cart, setCart] = useCartContext();
+	const cartIndicator = useRef();
 	const [groceryDropdown, setGroceryDropdown] = useState(false);
 	const [departments, setDepartments] = useState([]);
 	useEffect(() => {
@@ -75,26 +76,19 @@ const Header = () => {
 									</ul>
 								</div>
 							) : null}
-
-							{/* <DropdownMenu open={groceryDropdown}>
-								<DropdownMenuContent
-									onMouseLeave={() => setGroceryDropdown(false)}
-									className='font-normal bg-green-900 -mt-2 pt-2 z-10'
-								></DropdownMenuContent>
-							</DropdownMenu> */}
 						</li>
 					) : null}
 					<li className='z-50'>
 						<Link href='/account'>
 							<UserRound
-								size={24}
+								size={28}
 								color='white'
 								className='hover:scale-105 transition-transform'
 							/>
 						</Link>
 					</li>
 
-					<li className='z-50'>
+					<li className='z-50 relative hover:scale-105 transition-transform cursor-pointer'>
 						<ShoppingCart
 							onClick={() =>
 								Object.keys(cart).length > 0
@@ -105,10 +99,19 @@ const Header = () => {
 											description: "Add items to cart to view them",
 									  })
 							}
-							size={24}
+							size={28}
+							// fill='currentColor'
 							color='white'
-							className='hover:scale-105 transition-transform cursor-pointer'
+							className=''
 						/>
+						{Object.keys(cart).length == 0 ? null : (
+							<p
+								ref={cartIndicator}
+								className='absolute -top-3  -right-2.5 text-white rounded-full bg-pink-500 px-1.5 py-0.5 font-bold'
+							>
+								{Object.keys(cart).length}
+							</p>
+						)}
 					</li>
 				</ul>
 			</nav>

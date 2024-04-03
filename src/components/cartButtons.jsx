@@ -142,7 +142,7 @@ export function QuantityCartButton({ className, id }) {
 				}}
 			/>
 
-			<p className='rounded-md text-xl text-center bg-white h-8 pt-0.5 w-7 text-green-900'>
+			<p className='rounded-md  text-center bg-white h-5 pt-0.5 w-7 text-green-900'>
 				{cart[id]}
 			</p>
 			<ButtonIcon
