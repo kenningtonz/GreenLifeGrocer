@@ -17,10 +17,11 @@ async function Product({ params }) {
 	if (typeof productData === "string") {
 		return (
 			<main className='bg-white p-8'>
-				<section className=' rounded-2xl shadow-md bg-olive-200 shadow-olive-600/50 p-4 '>
-					<h1 className=''>Product Not Found</h1>
-					<p>Sorry, we could not find the product you are looking for</p>
-					<Link href='/departments' className='underline'>
+				<section className='flex flex-col items-center rounded-2xl shadow-md bg-olive-200 shadow-olive-600/50 p-4 '>
+					<p className='text-center text-lg mb-4'>
+						Sorry, we could not find the product you are looking for
+					</p>
+					<Link href='/departments' className='underline text-center'>
 						Back to Departments
 					</Link>
 				</section>
